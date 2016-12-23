@@ -125,12 +125,12 @@ Gui, 99: Color, FFFFFF
 		Gui, 99: Font, bold
 		Gui, 99: Add, Text, x12 y125 cBLUE, SUBJECT DESCRIPTION:
 		Gui, 99: Font,
-		Gui, 99: Add, Text, x12 y145 w536 r2 c006600 vDESC_SUB_PREVIEW2 gCOPY_SUBJECT, %SUBJECT%
+		Gui, 99: Add, Text, x12 y145 w536 r2 c006600 vDESC_SUB_PREVIEW2 gCOPY_SUBJECT 0x80, %SUBJECT%
 		
 		Gui, 99: Font, bold
 		Gui, 99: Add, Text, x12 y185 cBLUE, ISSUE DESCRIPTION:
 		Gui, 99: Font,
-		Gui, 99: Add, Text, x12 y205 w536 r25 c006600 vISSUE_PREVIEW gCOPY_ISSUE, %CASE_DESC%
+		Gui, 99: Add, Text, x12 y205 w536 r25 c006600 vISSUE_PREVIEW gCOPY_ISSUE 0x80, %CASE_DESC%
 
 Gui, 99: Show, Center w562 h550, TechOps Case Builder v.%VERSION%
 
@@ -506,9 +506,7 @@ return
 
 
 
-^F1:: ; Gather caller info from Interactive Desktop
-StartTime := A_Now
-FormatTime, StartTime, StartTime, yyyy-MM-dd hh:mm:sstt
+^1:: ; Gather caller info from Interactive Desktop
 LOG :=
 GROUP :=
 PHONE :=
@@ -517,6 +515,10 @@ WinActivate, Interaction Desktop
 Send, {LCtrl Down}{LShift Down}p{LShift Up}{LCtrl Up}
 Sleep, 1000
 WinGetTitle, WINTITLE, A
+
+WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
+FileAppend, %WINTITLE%`n, %WINTITLE_FILE%
+
 if (WINTITLE != "Interaction desktop")
 	{
 		;MouseClick, left, 75, 45
@@ -530,29 +532,62 @@ if (WINTITLE != "Interaction desktop")
 		Send, {LCtrl Down}c{LCtrl Up}
 		Sleep, 100
 		LOG := Clipboard
-		GROUP := TF_Find(LOG,"","","Entered Workgroup",0,1)
-		GROUP := RegExReplace(GROUP, ".*Entered Workgroup ", "")
-		PHONE := TF_Find(LOG,"","","sip:",1,1)
-		PHONE := RegExReplace(PHONE, ".*sip:", "")
-		PHONE := RegExReplace(PHONE, "@.*", "")
-		PHONE := RegExReplace(PHONE, "^(\d{3})", "$1-")
-		PHONE := RegExReplace(PHONE, "(\d{4})$", "-$1")
+		
+		WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
+		FileAppend, %LOG%`n`n, %WINTITLE_FILE%
+		
 		WINTITLE := RegExReplace(WINTITLE, " - sip:.*", "")
 		WINTITLE := RegExReplace(WINTITLE, " -$", "")
+		PROPERTY := RegExReplace(WINTITLE, " - .*", "")
+		PROPERTY := RegExReplace(PROPERTY, "(^\s)", "")
+		PROPERTY := RegExReplace(PROPERTY, "(\s+$)", "")
+		GROUP := TF_Find(LOG,"","","Entered Workgroup",0,1)
+		GROUP := RegExReplace(GROUP, ".*Entered Workgroup ", "")
+		PHONE := TF_Find(LOG,"","","ANI:",1,1)
+		PHONE := RegExReplace(PHONE, ".*ANI:", "") ; Get the phone number
+  		PHONE := RegExReplace(PHONE, ".*sip:", "") ; Strip sip if exists
+  		PHONE := RegExReplace(PHONE, "@.*", "") ; Strip sip if exists
+		PHONE := RegExReplace(PHONE, "^\s+", "") ; Strip leading spaces
+		PHONE := RegExReplace(PHONE, "(\s+$)", "") ; Strip trailing spaces
+		PHONE := RegExReplace(PHONE, "^(\d{3})", "$1-") ; Add first hyphen
+		PHONE := RegExReplace(PHONE, "(\d{4})$", "-$1") ; Add second hyphen
 		WinClose, %WINTITLE%
-		
-		GuiControl,99:,UPHONE, %PHONE%
-		GuiControl,99:,SITENAME, %WINTITLE%
 	}
 return
 
 
-;^F7::
-;;TID := "TEST2"
-;InputBox, TID, TermID, , , 200, 100
-;GuiControl,99:,TID, %TID%
-;MsgBox, %TID%
-;return
+
+^2:: ; Paste caller info from Interactive Desktop
+CurTime := A_Now
+FormatTime, CurTime, CurTime, yyyy-MM-dd hh:mm:sstt
+SetKeyDelay, 15
+
+Send,
+(
+{Home}%CurTime% (%GROUP%)
+CASE:{Space 1}
+PROPERTY: %PROPERTY%{Space 1}
+NAME:{Space 1}
+PHONE:{Space 1}%PHONE%
+ISSUE:{Space 1}
+CLIENT EXPECTATION:{Space 1}
+RESOLUTION:{Space 1}
+____________________________________________________________
+
+
+)
+
+Sleep, 100
+Send, {Up 6}{End}
+SetKeyDelay, 0
+return
+
+
+
+^!F2::reload
+MsgBox reloaded
+return
+
 
 
 ^F7::
@@ -561,14 +596,8 @@ TEST := RegExReplace(TEST, "^\s+", "")  ; (Strip leading spaces)
 TEST := RegExReplace(TEST, "\s+$", "")  ; (Strip trailing spaces)
 TEST := RegExReplace(TEST, "^0+", "")	; (Strip leading zeros)
 MsgBox, ***%TEST%***
-
 return
 
-
-
-^!F2::reload
-MsgBox reloaded
-return
 
 
 ;	version number MAJOR.MINOR.PATCH, increment the:
@@ -580,7 +609,6 @@ return
 
 
 
-		
 ;MsgBox, 0, , 
 ;(LTrim
 ;ISSUE_HARDWARE = %ISSUE_HARDWARE%
