@@ -7,7 +7,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include %A_ScriptDir%\_classes.ahk
 
 ;VERSION := "0.82.01"
-VERSION := "2016.12.23.0754"
+;VERSION := "2016.12.23.0754"
+VERSION := "2017.03.09.0723"
 
 ; GUI WINDOW
 Gui, 99: Destroy
@@ -95,12 +96,12 @@ Gui, 99: Color, FFFFFF
 		Gui, 99: Add, Text, x12 y245 w536 cBLACK vDESC_SUB_PREVIEW gCOPY_SUBJECT 0x80, %SUBJECT%
 		Gui, 99: Font,
 		
-		Gui, 99: Add, Text, x12 y268 cRED  vDESC_SUB_TEXT1, SUBJECT DESCRIPTION:
-		Gui, 99: Add, Text, x12 y268 cBLUE vDESC_SUB_TEXT2 hidden, SUBJECT DESCRIPTION:
+		Gui, 99: Add, Text, x12 y268 cRED  vDESC_SUB_TEXT1 gCOPY_SUBJECT, SUBJECT DESCRIPTION:
+		Gui, 99: Add, Text, x12 y268 cBLUE vDESC_SUB_TEXT2 gCOPY_SUBJECT hidden, SUBJECT DESCRIPTION:
 		Gui, 99: Add, Edit, x140 y265 w408 h20 gCHECK vDESC_SUB
 		
-		Gui, 99: Add, Text, x12 y287 cRED  vDESC_ISSUE_TEXT1, ISSUE DESCRIPTION:
-		Gui, 99: Add, Text, x12 y287 cBLUE vDESC_ISSUE_TEXT2 hidden, ISSUE DESCRIPTION:
+		Gui, 99: Add, Text, x12 y287 cRED  vDESC_ISSUE_TEXT1 gCOPY_ISSUE, ISSUE DESCRIPTION:
+		Gui, 99: Add, Text, x12 y287 cBLUE vDESC_ISSUE_TEXT2 gCOPY_ISSUE hidden, ISSUE DESCRIPTION:
 		Gui, 99: Add, Edit, x12 y303 w536 r14 gCHECK vDESC_ISSUE
 		
 		Gui, 99: Add, Text, x12 y268 Hidden cBLUE vSITE_TS_TEXT, TROUBLESHOOTING STEPS COMPLETED BY SITE:
@@ -584,7 +585,7 @@ return
 
 
 
-^!F2::reload
+^!R::reload
 MsgBox reloaded
 return
 
