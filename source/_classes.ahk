@@ -42,6 +42,7 @@ class xchange
 		GuiControlGet, DESC_ISSUE
 		GuiControlGet, SITE_TS
 		GuiControlGet, PV_ERRORS
+		GuiControlGet, RESOLUTION
 		GuiControlGet, ESCALATE
 		
 		If (A_GuiControl="UNAME") ; Change text color if field blank/filled
@@ -584,6 +585,7 @@ class xchange
 		GuiControlGet, DESC_ISSUE
 		GuiControlGet, SITE_TS
 		GuiControlGet, PV_ERRORS
+		GuiControlGet, RESOLUTION
 		GuiControlGet, ESCALATE		
 		
 		TID := RegExReplace(TID, "^\s+", "")  ; (Strip leading spaces)
@@ -748,6 +750,13 @@ class xchange
 			}
 		}
 		
+		; SITE TROUBLESHOOTING
+		SITE_TS_DESC :=
+		if (SITE_TS != "")
+		{
+			SITE_TS_DESC := "SITE TROUBLESHOOTING:`r`n" SITE_TS
+		}
+		
 		; PROVIEW ERRORS
 		PV_ERRORS_DESC :=
 		if (PV_ERRORS != "")
@@ -755,11 +764,11 @@ class xchange
 			PV_ERRORS_DESC := "PROVIEW ERRORS:`r`n" PV_ERRORS
 		}
 		
-		; SITE TROUBLESHOOTING
-		SITE_TS_DESC :=
-		if (SITE_TS != "")
+		; RESOLUTION
+		RESOLUTION_DESC :=
+		if (RESOLUTION != "")
 		{
-			SITE_TS_DESC := "SITE TROUBLESHOOTING:`r`n" SITE_TS
+			RESOLUTION_DESC := "RESOLUTION-NOTES:`r`n" RESOLUTION
 		}
 		
 		; CASE DESCRIPTION
@@ -853,6 +862,10 @@ class xchange
 		if (PV_ERRORS_DESC != "")
 		{
 			CASE_DESC := CASE_DESC "`r`n`r`n" PV_ERRORS_DESC
+		}
+		if (RESOLUTION_DESC != "")
+		{
+			CASE_DESC := CASE_DESC "`r`n`r`n" RESOLUTION_DESC
 		}
 		CASE_DESC := RegExReplace(CASE_DESC, "`r`n", "`n")
 		CASE_DESC := RegExReplace(CASE_DESC, "`n", "`r`n")

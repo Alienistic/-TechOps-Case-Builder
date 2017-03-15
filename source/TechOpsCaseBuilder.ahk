@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include %A_ScriptDir%\_classes.ahk
 
 ;VERSION := "0.82.01"
-VERSION := "2017.03.15.1152"
+VERSION := "2017.03.15.1503"
 
 ; GUI WINDOW
 Gui, 99: Destroy
@@ -90,6 +90,7 @@ Gui, 99: Color, FFFFFF
 		Gui, 99: Add, Button, x12  y208 h25 gISSUE cRED, Issue description
 		Gui, 99: Add, Button, x102 y208 h25 gSITE_TS, Troubleshooting by property
 		Gui, 99: Add, Button, x244 y208 h25 gPV_ERRORS, Proview Errors
+		Gui, 99: Add, Button, x323 y208 h25 gRESOLUTION, Resolution-Notes
 		
 		Gui, 99: Font, bold
 		Gui, 99: Add, Text, x12 y245 w536 cBLACK vDESC_SUB_PREVIEW gCOPY_SUBJECT 0x80, %SUBJECT%
@@ -108,6 +109,9 @@ Gui, 99: Color, FFFFFF
 		
 		Gui, 99: Add, Text, x12 y268 Hidden cBLUE vPV_ERRORS_TEXT, PLEASE NOTE WHAT ERRORS (IF ANY) ARE SHOWING IN PROVIEW:
 		Gui, 99: Add, Edit, x12 y287 w536 r15 Hidden gCHECK vPV_ERRORS
+		
+		Gui, 99: Add, Text, x12 y268 Hidden cBLUE vRESOLUTION_TEXT, RESOLUTION NOTES:
+		Gui, 99: Add, Edit, x12 y287 w536 r15 Hidden gCHECK vRESOLUTION
 		
 		Gui, 99: Add, Button, x12 y500 h25 gCLEAR_ALL, RESET
 		Gui, 99: Add, Button, x69 y500 h25 gCOPY_SUBJECT, Copy Subject
@@ -182,7 +186,7 @@ LOG_CALL:
 	}
 	if (UPHONE != "")
 	{
-		CALL_INFO := CALL_INFO "PHONE: " UPHONE "`r`n"
+		CALL_INFO := CALL_INFO "PHONE: " UPHONE "`r`n`r`n"
 	}
 	
 	; Join Call Log Info
@@ -214,6 +218,8 @@ SITE_TS:
 	GuiControl, 99: Hide, DESC_ISSUE_TEXT1
 	GuiControl, 99: Hide, DESC_ISSUE_TEXT2
 	GuiControl, 99: Hide, DESC_ISSUE
+	GuiControl, 99: Hide, RESOLUTION_TEXT
+	GuiControl, 99: Hide, RESOLUTION
 }
 return
 
@@ -229,6 +235,25 @@ PV_ERRORS:
 	GuiControl, 99: Hide, DESC_ISSUE_TEXT1
 	GuiControl, 99: Hide, DESC_ISSUE_TEXT2
 	GuiControl, 99: Hide, DESC_ISSUE
+	GuiControl, 99: Hide, RESOLUTION_TEXT
+	GuiControl, 99: Hide, RESOLUTION
+}
+return
+
+RESOLUTION:
+{
+	GuiControl, 99: Hide, SITE_TS_TEXT
+	GuiControl, 99: Hide, SITE_TS
+	GuiControl, 99: Hide, PV_ERRORS_TEXT
+	GuiControl, 99: Hide, PV_ERRORS
+	GuiControl, 99: Hide, DESC_SUB_TEXT1
+	GuiControl, 99: Hide, DESC_SUB_TEXT2
+	GuiControl, 99: Hide, DESC_SUB
+	GuiControl, 99: Hide, DESC_ISSUE_TEXT1
+	GuiControl, 99: Hide, DESC_ISSUE_TEXT2
+	GuiControl, 99: Hide, DESC_ISSUE
+	GuiControl, 99: Show, RESOLUTION_TEXT
+	GuiControl, 99: Show, RESOLUTION
 }
 return
 
@@ -238,6 +263,8 @@ ISSUE:
 	GuiControl, 99: Hide, SITE_TS
 	GuiControl, 99: Hide, PV_ERRORS_TEXT
 	GuiControl, 99: Hide, PV_ERRORS
+	GuiControl, 99: Hide, RESOLUTION_TEXT
+	GuiControl, 99: Hide, RESOLUTION
 	
 	GuiControl, 99: Show, DESC_SUB
 	GuiControlGet, DESC_SUB
@@ -397,8 +424,9 @@ CLEAR_ALL:
 	ISSUE_HARDWARE := 
 	ISSUE_SOFTWARE := 
 	ISSUE_CONNECTIVITY := 
-	PV_ERRORS := 
 	SITE_TS := 
+	PV_ERRORS := 
+	RESOLUTION := 
 	SITENAME := 
 	STAT_DOWN := 
 	STAT_ATM := 
@@ -425,6 +453,7 @@ CLEAR_ALL:
 	GuiControl, 99: ,TID
 	GuiControl, 99: ,SITE_TS
 	GuiControl, 99: ,PV_ERRORS
+	GuiControl, 99: ,RESOLUTION
 	
 	GuiControl, 99: ,DESC_SUB_PREVIEW,%SUBJECT%
 	GuiControl, 99: ,DESC_SUB_PREVIEW2,%SUBJECT%
@@ -472,9 +501,11 @@ CLEAR_ALL:
 	GuiControl, 99: Hide, SITE_TS
 	GuiControl, 99: Hide, PV_ERRORS_TEXT
 	GuiControl, 99: Hide, PV_ERRORS
-	GuiControl, 99: Show, DESC_SUB_TEXT
+	GuiControl, 99: Hide, RESOLUTION_TEXT
+	GuiControl, 99: Hide, RESOLUTION
+	GuiControl, 99: Show, DESC_SUB_TEXT1
 	GuiControl, 99: Show, DESC_SUB
-	GuiControl, 99: Show, DESC_ISSUE_TEXT
+	GuiControl, 99: Show, DESC_ISSUE_TEXT1
 	GuiControl, 99: Show, DESC_ISSUE
 	
 	GuiControl, 99: Move, STAT_DOWN, x228 y25	; x330 y143
