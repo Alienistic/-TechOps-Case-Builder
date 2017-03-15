@@ -467,6 +467,7 @@ class xchange
 		GuiControlGet, TID
 		GuiControlGet, GAMENAME
 		GuiControlGet, DESC_SUB
+		GuiControlGet, SFCASE
 		
 		xchange.svc_type_subj()
 		
@@ -504,22 +505,50 @@ class xchange
 			{
 				if (GAMENAME!="")
 				{
-					SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB
+					if (SFCASE!="")
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB " (SF#" SFCASE ")"
+					}
+					else
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB
+					}
 				}
 				else
 				{
-					SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB
+					if (SFCASE!="")
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+					}
+					else
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB
+					}
 				}
 			}
 			if (SVC_TYPE="ATM" or SVC_TYPE="FSK" or SVC_TYPE="JXC")
 			{
 				if (TID!="")
 				{
-					SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB
+					if (SFCASE!="")
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB " (SF#" SFCASE ")"
+					}
+					else
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB
+					}
 				}
 				else
 				{
-					SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB
+					if (SFCASE!="")
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+					}
+					else
+					{
+						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB
+					}
 				}
 			}
 		}
