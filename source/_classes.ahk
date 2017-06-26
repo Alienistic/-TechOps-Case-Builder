@@ -463,6 +463,7 @@ class xchange
 	format_subj()
 	{
 		global
+		GuiControlGet, UEMAIL
 		GuiControlGet, SITENAME
 		GuiControlGet, SVC_TYPE
 		GuiControlGet, TID
@@ -471,6 +472,10 @@ class xchange
 		GuiControlGet, SFCASE
 		
 		xchange.svc_type_subj()
+		
+		UEMAIL := RegExReplace(UEMAIL, "^\s+", "")  ; (Strip leading spaces)
+		UEMAIL := RegExReplace(UEMAIL, "\s+$", "")  ; (Strip trailing spaces)
+		StringLower UEMAIL, UEMAIL  ; (Lower case)
 		
 		;StringUpper TS_USER_CONTACT_FNAME, TS_USER_CONTACT_FNAME, T  ; (Title case)
 		SITENAME := RegExReplace(SITENAME, "^\s+", "")  ; (Strip leading spaces)

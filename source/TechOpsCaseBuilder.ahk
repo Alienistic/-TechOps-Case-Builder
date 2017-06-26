@@ -169,24 +169,25 @@ LOG_CALL:
 	CALL_INFO := 
 	
 	; Call Header
-	CALL_HEAD := CurTime "`r`n" SUBJECT "`r`n"
-	if (SFCASE != "")
-	{
-		CALL_HEAD := CALL_HEAD "CASE: " SFCASE "`r`n"
-	}
-	
-	; Caller info
+	CALL_HEAD := CurTime "`r`n"
 	if (UNAME != "")
 	{
-		CALL_INFO := CALL_INFO "NAME: " UNAME "`r`n"
+		CALL_HEAD := CALL_HEAD "NAME: " UNAME "`r`n"
 	}
 	if (UEMAIL != "")
 	{
-		CALL_INFO := CALL_INFO "EMAIL: " UEMAIL "`r`n"
+		CALL_HEAD := CALL_HEAD "EMAIL: " UEMAIL "`r`n"
 	}
 	if (UPHONE != "")
 	{
-		CALL_INFO := CALL_INFO "PHONE: " UPHONE "`r`n`r`n"
+		CALL_HEAD := CALL_HEAD "PHONE: " UPHONE "`r`n"
+	}
+	
+	; Call info
+	CALL_INFO := "`r`n" SUBJECT "`r`n"
+	if (SFCASE != "")
+	{
+		CALL_INFO := CALL_INFO "CASE: " SFCASE "`r`n`r`n"
 	}
 	
 	; Join Call Log Info
@@ -596,10 +597,10 @@ SetKeyDelay, 15
 Send,
 (
 {Home}%CurTime% (%GROUP%)
-CASE:{Space 1}
-PROPERTY: %PROPERTY%{Space 1}
 NAME:{Space 1}
 PHONE:{Space 1}%PHONE%
+PROPERTY: %PROPERTY%{Space 1}
+CASE:{Space 1}
 ISSUE:{Space 1}
 TROUBLESHOOTING:{Space 1}
 RESOLUTION:{Space 1}
