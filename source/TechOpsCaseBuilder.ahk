@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include %A_ScriptDir%\_classes.ahk
 
 ;VERSION := "0.82.01"
-VERSION := "2017.05.08.1107"
+VERSION := "2017.06.26.0837"
 
 ; GUI WINDOW
 Gui, 99: Destroy
