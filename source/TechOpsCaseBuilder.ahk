@@ -6,8 +6,33 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include %A_ScriptDir%\lib\tf.czr
 #Include %A_ScriptDir%\_classes.ahk
 
+GuiW := 562
+GuiH := 550
+
+SettingsINI := "TechOpsCaseBuilder.ini"
+IfExist, %SettingsINI%
+	{
+		IniRead, GuiPosX, %SettingsINI%, TechOpsCaseBuilder, GuiPosX
+		IniRead, GuiPosY, %SettingsINI%, TechOpsCaseBuilder, GuiPosY
+		
+		;MsgBox, The saved ini position is x%GuiPosX% y%GuiPosY%
+		
+		xchange.checkposition()
+	}
+	else
+	{
+		; w562 h550
+		GuiPosX := 50
+		GuiPosY := 50
+		IniWrite, %GuiPosX%, %SettingsINI%, TechOpsCaseBuilder, GuiPosX
+		IniWrite, %GuiPosY%, %SettingsINI%, TechOpsCaseBuilder, GuiPosY
+		;MsgBox, %SettingsINI% does not exist, setting window position default to 
+	}
+
+
 ;VERSION := "0.82.01"
 VERSION := "2017.06.29.1000"
+
 
 ; GUI WINDOW
 Gui, 99: Destroy
@@ -17,8 +42,6 @@ Gui, 99: Color, FFFFFF
 	;Gui, 99: Add, Picture, x-1 y-1, %A_ScriptDir%\everi2.jpg
 	;Gui, 99: Add, Picture, x512 y-1 w50 h50 Icon1, %A_ScriptDir%\logo.ico
 	;Gui, 99: Add, Text, x12 y12 BackGroundTrans cBLUE, SITE NAME: ;Transparent Background
-	
-	
 	
 	Gui, 99: Add, Text, x12 y12 cRED  vUNAME_TEXT1 gCP_UNAME, CALLER NAME:
 	Gui, 99: Add, Text, x12 y12 cBLUE vUNAME_TEXT2 gCP_UNAME hidden, CALLER NAME:
@@ -136,21 +159,25 @@ Gui, 99: Color, FFFFFF
 		Gui, 99: Font,
 		Gui, 99: Add, Text, x12 y205 w536 r25 c006600 vISSUE_PREVIEW gCOPY_ISSUE 0x80, %CASE_DESC%
 
-Gui, 99: Show, Center w562 h550, TechOps Case Builder v.%VERSION%
+Gui, 99: Show, Center w%GuiW% h%GuiH% x%GuiPosX% y%GuiPosY%, TechOps Case Builder v.%VERSION%
 
 ; NOTE:  -E0x200 to remove edit box border
 ; NOTE:   0x80 to allow ampersand in text box
+
+; Get and save window position when window moved
+OnMessage(0x03, "xchange.getposition")
 
 CHECK:
 {
 	xchange.guiopt()
 	xchange.format_subj()
 	xchange.format_issue()
-	IfWinActive, TechOps Case Builder
-	{
-		WinGetPos, X, Y, , , A  ; "A" to get the active window's pos.
-		;MsgBox, The active window is at %X%`,%Y%
-	}
+	;IfWinActive, TechOps Case Builder
+	;{
+	;	xchange.getposition()
+	;	;WinGetPos, X, Y, , , A  ; "A" to get the active window's pos.
+	;	;MsgBox, The active window is at %X%`,%Y%
+	;}
 }
 return
 

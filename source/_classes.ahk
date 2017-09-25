@@ -1,20 +1,44 @@
 class xchange
 {
-	position()
+	getposition()
 	{
 		global
 		; Get GUI Position and Save
 		Gui, 99: +LastFound
 		;WinGetPos,x,y,w,h
 		WinGetPos,x,y
-		DLPTOOL_GUIPOS := " x" x " y" y
+		GuiPosX := x
+		GuiPosY := y
 		
-		SetTimer, dlpToolPosition, 2000
+		SetTimer, getGuiPosition, 1000
 		return
-		dlpToolPosition:
+		getGuiPosition:
 		{
-			IniWrite, %DLPTOOL_GUIPOS%, %SettingsINI%, dlpWin, dlpToolGuiPosition
-			SetTimer, dlpToolPosition, off
+			IniWrite, %GuiPosX%, %SettingsINI%, TechOpsCaseBuilder, GuiPosX
+			IniWrite, %GuiPosY%, %SettingsINI%, TechOpsCaseBuilder, GuiPosY
+			SetTimer, getGuiPosition, off
+		}
+		return
+	}
+	
+	checkposition() ; Check GUI Position is in viewable desktop range
+	{
+		global
+		SysGet, DesktopWidth, 78
+		SysGet, DesktopHeight, 79
+		DesktopMaximumX := (DesktopWidth - GuiW - 10)
+		DesktopMaximumY := (DesktopHeight - 65)
+		
+		if (GuiPosX > DesktopMaximumX)
+		{
+			;MsgBox, GUI X out of range x=%DesktopMaximumX%
+			GuiPosX := DesktopMaximumX
+		}
+		
+		if (GuiPosY > DesktopMaximumY)
+		{
+			;MsgBox, GUI Y out of range y=%DesktopMaximumY%
+			GuiPosY := DesktopMaximumY
 		}
 		return
 	}
@@ -250,7 +274,6 @@ class xchange
 			
 			xchange.svc_type_subj()
 			
-			;MsgBox, SVC_TYPE: %SVC_TYPE%
 		}
 		;########################################
 		
@@ -503,7 +526,7 @@ class xchange
 		
 		LOCATION := RegExReplace(LOCATION, "^\s+", "")  ; (Strip leading spaces)
 		LOCATION := RegExReplace(LOCATION, "\s+$", "")  ; (Strip trailing spaces)
-		StringUpper LOCATION, LOCATION, T  ; (Title case)
+		StringUpper LOCATION, LOCATION, U  ; (Upper case)
 		
 		if (SITENAME!="" and DESC_SUB!="")
 		{
