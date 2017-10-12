@@ -624,8 +624,8 @@ SetKeyDelay, 15
 Send,
 (
 {Home}%CurTime% (%GROUP%)
-NAME:{Space 1}
-PHONE:{Space 1}%PHONE%
+CONTACT NAME:{Space 1}
+CONTACT PHONE:{Space 1}%PHONE%
 PROPERTY: %PROPERTY%{Space 1}
 CASE:{Space 1}
 ISSUE:{Space 1}
