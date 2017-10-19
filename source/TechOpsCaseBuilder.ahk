@@ -666,13 +666,13 @@ ID_CODE()
 	; Generate Random Alphanumeric String
 	Chars1 = 234567892345678923456789
 	Chars2 = ABCDEFGHJKLMNPQRSTUVWXYZ
-	;Chars3 = abcdefghjklmnpqrstuvwxyz
+	Chars3 = abcdefghjklmnpqrstuvwxyz
 	str =
 	clipboard =
-	UpperRange = 2 ;<-- use all 3 character strings
-	len1 = 1 ;<-- number of characters first set
+	UpperRange = 3 ;<-- use all 3 character strings
+	len1 = 2 ;<-- number of characters first set
 	len2 = 15 ;<-- number of characters second set
-	len3 = 1 ;<-- number of characters third set
+	len3 = 3 ;<-- number of characters third set
 	
 	; generate string
 	loop, %len1%
@@ -697,8 +697,9 @@ ID_CODE()
 		str = %str%%z% ;<-- and add it to the password string
 	}
 	
-	IDCODE := "IDCODE" str ;<-- put the completed string on the clipboard
-	clipboard := "IDCODE" str ;<-- put the completed string on the clipboard
+	;IDCODE := "A" str ;<-- put the completed string on a variable
+	;clipboard := "ID#" str ;<-- put the completed string on the clipboard
+	clipboard := "" str ;<-- put the completed string on the clipboard
 	Clipwait ;<-- wait for the clipboard to accept the string
 }
 
