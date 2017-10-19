@@ -659,6 +659,58 @@ return
 
 
 
+^!I::
+ID_CODE()
+{
+	global
+	; Generate Random Alphanumeric String
+	Chars1 = 234567892345678923456789
+	Chars2 = ABCDEFGHJKLMNPQRSTUVWXYZ
+	;Chars3 = abcdefghjklmnpqrstuvwxyz
+	str =
+	clipboard =
+	UpperRange = 2 ;<-- use all 3 character strings
+	len1 = 1 ;<-- number of characters first set
+	len2 = 15 ;<-- number of characters second set
+	len3 = 1 ;<-- number of characters third set
+	
+	; generate string
+	loop, %len1%
+	{ 
+		random,x,1,%Chars2% ;<-- selects the Character string
+		random,y,1,24 ;<-- selects the character in the string
+		StringMid,z,Chars2,%y%,1 ;<-- grab the selected letter
+		str = %str%%z% ;<-- and add it to the password string
+	}
+	loop, %len2%
+	{ 
+		random,x,1,%UpperRange% ;<-- selects the Character string
+		random,y,1,24 ;<-- selects the character in the string
+		StringMid,z,Chars%x%,%y%,1 ;<-- grab the selected letter
+		str = %str%%z% ;<-- and add it to the password string
+	}
+	loop, %len3%
+	{ 
+		random,x,1,%Chars2% ;<-- selects the Character string
+		random,y,1,24 ;<-- selects the character in the string
+		StringMid,z,Chars2,%y%,1 ;<-- grab the selected letter
+		str = %str%%z% ;<-- and add it to the password string
+	}
+	
+	IDCODE := "IDCODE" str ;<-- put the completed string on the clipboard
+	clipboard := "IDCODE" str ;<-- put the completed string on the clipboard
+	Clipwait ;<-- wait for the clipboard to accept the string
+}
+
+ID_CODE()
+return
+
+
+
+
+
+
+
 ;	version number MAJOR.MINOR.PATCH, increment the:
 ;	
 ;	MAJOR version when you make incompatible API changes,
