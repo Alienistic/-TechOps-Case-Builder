@@ -8,7 +8,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 GuiW := 562
 GuiH := 550
-
+ 
 SettingsINI := "TechOpsCaseBuilder.ini"
 IfExist, %SettingsINI%
 	{
