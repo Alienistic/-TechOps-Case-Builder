@@ -199,15 +199,15 @@ LOG_CALL:
 	CALL_HEAD := CurTime "`r`n"
 	if (UNAME != "")
 	{
-		CALL_HEAD := CALL_HEAD "NAME: " UNAME "`r`n"
+		CALL_HEAD := CALL_HEAD "CONTACT NAME: " UNAME "`r`n"
 	}
 	if (UEMAIL != "")
 	{
-		CALL_HEAD := CALL_HEAD "EMAIL: " UEMAIL "`r`n"
+		CALL_HEAD := CALL_HEAD "CONTACT EMAIL: " UEMAIL "`r`n"
 	}
 	if (UPHONE != "")
 	{
-		CALL_HEAD := CALL_HEAD "PHONE: " UPHONE "`r`n"
+		CALL_HEAD := CALL_HEAD "CONTACT PHONE: " UPHONE "`r`n"
 	}
 	
 	; Call info
