@@ -514,7 +514,7 @@ class xchange
 		
 		GAMENAME := RegExReplace(GAMENAME, "^\s+", "")  ; (Strip leading spaces)
 		GAMENAME := RegExReplace(GAMENAME, "\s+$", "")  ; (Strip trailing spaces)
-		StringUpper GAMENAME, GAMENAME, T  ; (Title case)
+		StringUpper GAMENAME, GAMENAME, U  ; (Upper case)
 		
 		SERIALNUM := RegExReplace(SERIALNUM, "^\s+", "")  ; (Strip leading spaces)
 		SERIALNUM := RegExReplace(SERIALNUM, "\s+$", "")  ; (Strip trailing spaces)
@@ -622,7 +622,7 @@ class xchange
 		
 		GAMENAME := RegExReplace(GAMENAME, "^\s+", "")  ; (Strip leading spaces)
 		GAMENAME := RegExReplace(GAMENAME, "\s+$", "")  ; (Strip trailing spaces)
-		StringUpper GAMENAME, GAMENAME, T  ; (Title case)
+		StringUpper GAMENAME, GAMENAME, U  ; (Upper case)
 		
 		SERIALNUM := RegExReplace(SERIALNUM, "^\s+", "")  ; (Strip leading spaces)
 		SERIALNUM := RegExReplace(SERIALNUM, "\s+$", "")  ; (Strip trailing spaces)
@@ -634,7 +634,7 @@ class xchange
 		
 		LOCATION := RegExReplace(LOCATION, "^\s+", "")  ; (Strip leading spaces)
 		LOCATION := RegExReplace(LOCATION, "\s+$", "")  ; (Strip trailing spaces)
-		StringUpper LOCATION, LOCATION, T  ; (Title case)
+		StringUpper LOCATION, LOCATION, U  ; (Upper case)
 		
 		; SITE DISPATCH AVAILABILITY
 		
