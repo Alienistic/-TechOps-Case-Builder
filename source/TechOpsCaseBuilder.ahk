@@ -31,7 +31,7 @@ IfExist, %SettingsINI%
 
 
 ;VERSION := "0.82.01"
-VERSION := "2017.10.26.1049"
+VERSION := "2017.10.26.1104"
 
 
 ; GUI WINDOW

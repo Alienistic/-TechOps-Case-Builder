@@ -184,6 +184,56 @@ class xchange
 			Send, {end}
 		}
 		
+		If (A_GuiControl="TID")
+		{
+			GuiControlGet, TID
+			TID := RegExReplace(TID, "^\s+", "")  ; (Strip leading spaces)
+			TID := RegExReplace(TID, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper TID, TID, U  ; (Upper case)
+			GuiControl, 99: ,TID, %TID%
+			Send, {end}
+		}
+		
+		If (A_GuiControl="GAMENAME")
+		{
+			GuiControlGet, GAMENAME
+			GAMENAME := RegExReplace(GAMENAME, "^\s+", "")  ; (Strip leading spaces)
+			GAMENAME := RegExReplace(GAMENAME, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper GAMENAME, GAMENAME, U  ; (Upper case)
+			GuiControl, 99: ,GAMENAME, %GAMENAME%
+			Send, {end}
+		}
+
+		If (A_GuiControl="SERIALNUM")
+		{
+			GuiControlGet, SERIALNUM
+			SERIALNUM := RegExReplace(SERIALNUM, "^\s+", "")  ; (Strip leading spaces)
+			SERIALNUM := RegExReplace(SERIALNUM, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper SERIALNUM, SERIALNUM, U  ; (Upper case)
+			GuiControl, 99: ,SERIALNUM, %SERIALNUM%
+			Send, {end}
+		}
+
+		If (A_GuiControl="ASSETNUM")
+		{
+			GuiControlGet, ASSETNUM
+			ASSETNUM := RegExReplace(ASSETNUM, "^\s+", "")  ; (Strip leading spaces)
+			ASSETNUM := RegExReplace(ASSETNUM, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper ASSETNUM, ASSETNUM, U  ; (Upper case)
+			GuiControl, 99: ,ASSETNUM, %ASSETNUM%
+			Send, {end}
+		}
+		
+		If (A_GuiControl="LOCATION")
+		{
+			GuiControlGet, LOCATION
+			LOCATION := RegExReplace(LOCATION, "^\s+", "")  ; (Strip leading spaces)
+			LOCATION := RegExReplace(LOCATION, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper LOCATION, LOCATION, U  ; (Upper case)
+			GuiControl, 99: ,LOCATION, %LOCATION%
+			Send, {end}
+		}
+		
 		If (A_GuiControl="ISSUE_HARDWARE")
 		{
 			GuiControlGet, ISSUE_HARDWARE
