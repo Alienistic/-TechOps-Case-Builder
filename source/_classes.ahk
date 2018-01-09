@@ -43,6 +43,81 @@ class xchange
 		return
 	}
 	
+	cleanfieldtext()
+	{
+		global
+		
+		If (GuiFieldPrev="UEMAIL")
+		{
+			GuiControlGet, UEMAIL
+			UEMAIL := RegExReplace(UEMAIL, "^\s+", "")  ; (Strip leading spaces)
+			UEMAIL := RegExReplace(UEMAIL, "\s+$", "")  ; (Strip trailing spaces)
+			StringLower UEMAIL, UEMAIL  ; (Lower case)
+			GuiControl, 99: ,UEMAIL, %UEMAIL%
+			;Send, {end}
+		}
+		
+		If (GuiFieldPrev="SFCASE")
+		{
+			GuiControlGet, SFCASE
+			SFCASE := RegExReplace(SFCASE, "^\s+", "")  ; (Strip leading spaces)
+			SFCASE := RegExReplace(SFCASE, "\s+$", "")  ; (Strip trailing spaces)
+			SFCASE := RegExReplace(SFCASE, "^0+", "")	; (Strip leading zeros)
+			GuiControl, 99: ,SFCASE, %SFCASE%
+			;Send, {end}
+		}
+		
+		If (GuiFieldPrev="TID")
+		{
+			GuiControlGet, TID
+			TID := RegExReplace(TID, "^\s+", "")  ; (Strip leading spaces)
+			TID := RegExReplace(TID, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper TID, TID, U  ; (Upper case)
+			GuiControl, 99: ,TID, %TID%
+			;Send, {end}
+		}
+		
+		If (GuiFieldPrev="GAMENAME")
+		{
+			GuiControlGet, GAMENAME
+			GAMENAME := RegExReplace(GAMENAME, "^\s+", "")  ; (Strip leading spaces)
+			GAMENAME := RegExReplace(GAMENAME, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper GAMENAME, GAMENAME, U  ; (Upper case)
+			GuiControl, 99: ,GAMENAME, %GAMENAME%
+			;Send, {end}
+		}
+
+		If (GuiFieldPrev="SERIALNUM")
+		{
+			GuiControlGet, SERIALNUM
+			SERIALNUM := RegExReplace(SERIALNUM, "^\s+", "")  ; (Strip leading spaces)
+			SERIALNUM := RegExReplace(SERIALNUM, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper SERIALNUM, SERIALNUM, U  ; (Upper case)
+			GuiControl, 99: ,SERIALNUM, %SERIALNUM%
+			Send, {end}
+		}
+
+		If (GuiFieldPrev="ASSETNUM")
+		{
+			GuiControlGet, ASSETNUM
+			ASSETNUM := RegExReplace(ASSETNUM, "^\s+", "")  ; (Strip leading spaces)
+			ASSETNUM := RegExReplace(ASSETNUM, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper ASSETNUM, ASSETNUM, U  ; (Upper case)
+			GuiControl, 99: ,ASSETNUM, %ASSETNUM%
+			;Send, {end}
+		}
+		
+		If (GuiFieldPrev="LOCATION")
+		{
+			GuiControlGet, LOCATION
+			LOCATION := RegExReplace(LOCATION, "^\s+", "")  ; (Strip leading spaces)
+			LOCATION := RegExReplace(LOCATION, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper LOCATION, LOCATION, U  ; (Upper case)
+			GuiControl, 99: ,LOCATION, %LOCATION%
+			;Send, {end}
+		}
+	}
+	
 	guiopt()
 	{
 		global
@@ -174,6 +249,8 @@ class xchange
 			}
 		}
 		
+; MOVED A_GUICONTROLS TO SEPARATE FUNCTION PROCESS
+
 		If (A_GuiControl="SFCASE")
 		{
 			GuiControlGet, SFCASE
@@ -181,56 +258,6 @@ class xchange
 			SFCASE := RegExReplace(SFCASE, "\s+$", "")  ; (Strip trailing spaces)
 			SFCASE := RegExReplace(SFCASE, "^0+", "")	; (Strip leading zeros)
 			GuiControl, 99: ,SFCASE, %SFCASE%
-			Send, {end}
-		}
-		
-		If (A_GuiControl="TID")
-		{
-			GuiControlGet, TID
-			TID := RegExReplace(TID, "^\s+", "")  ; (Strip leading spaces)
-			TID := RegExReplace(TID, "\s+$", "")  ; (Strip trailing spaces)
-			StringUpper TID, TID, U  ; (Upper case)
-			GuiControl, 99: ,TID, %TID%
-			Send, {end}
-		}
-		
-		If (A_GuiControl="GAMENAME")
-		{
-			GuiControlGet, GAMENAME
-			GAMENAME := RegExReplace(GAMENAME, "^\s+", "")  ; (Strip leading spaces)
-			GAMENAME := RegExReplace(GAMENAME, "\s+$", "")  ; (Strip trailing spaces)
-			StringUpper GAMENAME, GAMENAME, U  ; (Upper case)
-			GuiControl, 99: ,GAMENAME, %GAMENAME%
-			Send, {end}
-		}
-
-		If (A_GuiControl="SERIALNUM")
-		{
-			GuiControlGet, SERIALNUM
-			SERIALNUM := RegExReplace(SERIALNUM, "^\s+", "")  ; (Strip leading spaces)
-			SERIALNUM := RegExReplace(SERIALNUM, "\s+$", "")  ; (Strip trailing spaces)
-			StringUpper SERIALNUM, SERIALNUM, U  ; (Upper case)
-			GuiControl, 99: ,SERIALNUM, %SERIALNUM%
-			Send, {end}
-		}
-
-		If (A_GuiControl="ASSETNUM")
-		{
-			GuiControlGet, ASSETNUM
-			ASSETNUM := RegExReplace(ASSETNUM, "^\s+", "")  ; (Strip leading spaces)
-			ASSETNUM := RegExReplace(ASSETNUM, "\s+$", "")  ; (Strip trailing spaces)
-			StringUpper ASSETNUM, ASSETNUM, U  ; (Upper case)
-			GuiControl, 99: ,ASSETNUM, %ASSETNUM%
-			Send, {end}
-		}
-		
-		If (A_GuiControl="LOCATION")
-		{
-			GuiControlGet, LOCATION
-			LOCATION := RegExReplace(LOCATION, "^\s+", "")  ; (Strip leading spaces)
-			LOCATION := RegExReplace(LOCATION, "\s+$", "")  ; (Strip trailing spaces)
-			StringUpper LOCATION, LOCATION, U  ; (Upper case)
-			GuiControl, 99: ,LOCATION, %LOCATION%
 			Send, {end}
 		}
 		
@@ -428,7 +455,7 @@ class xchange
 			}
 			If (SVC_TYPE="FSK")
 			{
-				SVC_TYPE_SUBJ := "FSK"
+				SVC_TYPE_SUBJ := "Full-Service Kiosk"
 				
 				;STAT_DOWN := 1
 				;STAT_ATM := 0
@@ -497,7 +524,7 @@ class xchange
 			}
 			If (SVC_TYPE="JXC")
 			{
-				SVC_TYPE_SUBJ := "FSK"
+				SVC_TYPE_SUBJ := "Jackpot Dispense Unit"
 				
 				;STAT_DOWN := 1
 				;STAT_ATM := 0
@@ -586,22 +613,22 @@ class xchange
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB " (SF#" SFCASE ")"
 					}
 					else
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB
 					}
 				}
 				else
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
 					}
 					else
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB
 					}
 				}
 			}
@@ -611,22 +638,22 @@ class xchange
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB " (SF#" SFCASE ")"
 					}
 					else
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB
 					}
 				}
 				else
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
 					}
 					else
 					{
-						SUBJECT := SITENAME " | " SVC_TYPE_SUBJ " - " DESC_SUB
+						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB
 					}
 				}
 			}
@@ -643,6 +670,8 @@ class xchange
 		global
 		SetFormat, float, 0.0
 		
+		GuiControlGet, UNAME
+		GuiControlGet, UPHONE
 		GuiControlGet, ALT_AVAILABILITY
 		GuiControlGet, SVC_TYPE
 		GuiControlGet, TID
@@ -851,11 +880,26 @@ class xchange
 		
 		; CASE DESCRIPTION
 		CASE_DESC := 
+		
+		if (UNAME != "")
+		{
+			CASE_DESC := CASE_DESC "CONTACT NAME: " . UNAME "`r`n"
+		}
+
+		if (UPHONE != "")
+		{
+			CASE_DESC := CASE_DESC "CONTACT PHONE: " . UPHONE "`r`n"
+		}
+
+		if (UNAME OR UPHONE != "")
+		{
+			CASE_DESC := CASE_DESC "`r`n"
+		}
+		
 		if (DISPATCH != "")
 		{
 			CASE_DESC := CASE_DESC . DISPATCH "`r`n"
 		}
-		;MsgBox, CASE_DESC: %CASE_DESC%
 		
 		; ISSUE DESCRIPTION
 		ISSUE_DESC :=

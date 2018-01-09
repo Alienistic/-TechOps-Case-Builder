@@ -31,7 +31,8 @@ IfExist, %SettingsINI%
 
 
 ;VERSION := "0.82.01"
-VERSION := "2017.10.26.1104"
+;VERSION := "2017.10.26.1104"
+VERSION := "2018.01.09.1132"
 
 
 ; GUI WINDOW
@@ -145,6 +146,7 @@ Gui, 99: Color, FFFFFF
 		Gui, 99: Font, bold cRED
 		Gui, 99: Add, Checkbox, x340 y511 gCHECK vESCALATE, ESCALATE
 		Gui, 99: Font, 
+		; Gui, 99: Add, Text, x12 y535 w500 cRED  vCURFIELD, %GuiFieldCur%
 		
 	; Preview Tab
 	Gui, 99: Tab,  Preview
@@ -167,11 +169,14 @@ Gui, 99: Show, Center w%GuiW% h%GuiH% x%GuiPosX% y%GuiPosY%, TechOps Case Builde
 ; Get and save window position when window moved
 OnMessage(0x03, "xchange.getposition")
 
+
 CHECK:
 {
+	checkfieldtext()
 	xchange.guiopt()
 	xchange.format_subj()
 	xchange.format_issue()
+	
 	;IfWinActive, TechOps Case Builder
 	;{
 	;	xchange.getposition()
@@ -180,6 +185,28 @@ CHECK:
 	;}
 }
 return
+
+checkfieldtext()
+{
+	global
+	GuiControlGet, GuiFieldCur, focusV
+	
+	if (GuiFieldCur != GuiFieldPrev)
+	{
+		GuiControl, 99: ,CURFIELD, Changed from %GuiFieldPrev% to %GuiFieldCur%
+		
+		xchange.cleanfieldtext()
+	}
+	else
+	{
+		GuiControl, 99: ,CURFIELD, %GuiFieldCur% (unchanged)
+	}
+	
+	GuiFieldPrev = %GuiFieldCur%
+}
+
+
+
 
 LOG_CALL:
 {
@@ -570,13 +597,14 @@ LOG :=
 GROUP :=
 PHONE :=
 WINTITLE :=
+MouseGetPos, mXpos, mYpos
 WinActivate, Interaction Desktop
 Send, {LCtrl Down}{LShift Down}p{LShift Up}{LCtrl Up}
 Sleep, 1000
 WinGetTitle, WINTITLE, A
 
-WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
-FileAppend, %WINTITLE%`n, %WINTITLE_FILE%
+;WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
+;FileAppend, %WINTITLE%`n, %WINTITLE_FILE%
 
 if (WINTITLE != "Interaction desktop")
 	{
@@ -592,8 +620,8 @@ if (WINTITLE != "Interaction desktop")
 		Sleep, 100
 		LOG := Clipboard
 		
-		WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
-		FileAppend, %LOG%`n`n, %WINTITLE_FILE%
+		;WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
+		;FileAppend, %LOG%`n`n, %WINTITLE_FILE%
 		
 		WINTITLE := RegExReplace(WINTITLE, " - sip:.*", "")
 		WINTITLE := RegExReplace(WINTITLE, " -$", "")
@@ -612,6 +640,7 @@ if (WINTITLE != "Interaction desktop")
 		PHONE := RegExReplace(PHONE, "(\d{4})$", "-$1") ; Add second hyphen
 		WinClose, %WINTITLE%
 	}
+MouseMove, mXpos, mYpos
 return
 
 
