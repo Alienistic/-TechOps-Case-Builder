@@ -30,9 +30,9 @@ IfExist, %SettingsINI%
 	}
 
 
-;VERSION := "0.82.01"
-;VERSION := "2017.10.26.1104"
-VERSION := "2018.01.09.1132"
+;VERSION := "2018.01.12.1645"
+VERSION := "2018.01.31.1654"
+
 
 
 ; GUI WINDOW
@@ -67,9 +67,9 @@ Gui, 99: Color, FFFFFF
 	
 	Gui, 99: Add, Text, x260 y52 cRED  vSITEAVAIL_TEXT1, SITE AVAILABILITY:
 	Gui, 99: Add, Text, x260 y52 cBLUE vSITEAVAIL_TEXT2 hidden, SITE AVAILABILITY:
-	Gui, 99: Add, DropDownList, x260 y68 w148 gCHECK vAVAILABILITY,No Dispatch Required||24-7 Always Open|8AM-5PM Business Hours|5PM-8AM After Hours|Other
+	Gui, 99: Add, DropDownList, x260 y68 w148 gCHECK vAVAILABILITY,No Dispatch Required||24-7 Always Open|8AM-5PM Business Hours|5PM-8AM After Hours|Standard Business Hours|Other
 	Gui, 99: Add, Text, x408 y52 cBLUE hidden vAVAIL_TEXT, SPECIFY:
-	Gui, 99: Add, Edit, x408 y68 w141 h20 Hidden gCHECK vALT_AVAILABILITY
+	Gui, 99: Add, Edit, x408 y68 w141 h20 Hidden gCHECK vALT_AVAILABILITY, Standard Business Hours
 	
 	
 	Gui, 99: Add, Tab3, x0 y96 w564 h500, ATM KIOSK GAME|Preview
@@ -170,6 +170,7 @@ Gui, 99: Show, Center w%GuiW% h%GuiH% x%GuiPosX% y%GuiPosY%, TechOps Case Builde
 OnMessage(0x03, "xchange.getposition")
 
 
+
 CHECK:
 {
 	checkfieldtext()
@@ -204,7 +205,6 @@ checkfieldtext()
 	
 	GuiFieldPrev = %GuiFieldCur%
 }
-
 
 
 
@@ -502,7 +502,7 @@ CLEAR_ALL:
 	GuiControl, 99: ,UPHONE
 	GuiControl, 99: ,SFCASE
 	GuiControl, 99: ,SITENAME
-	GuiControl, 99: ,AVAILABILITY, |No Dispatch Required||24-7 Always Open|8AM-5PM Business Hours|5PM-8AM After Hours|Other
+	GuiControl, 99: ,AVAILABILITY, |No Dispatch Required||24-7 Always Open|8AM-5PM Business Hours|5PM-8AM After Hours|Standard Business Hours|Other
 	GuiControl, 99: ,ALT_AVAILABILITY
 	GuiControl, 99: ,SVC_TYPE,|ATM|EGM|FSK||JXC
 	GuiControl, 99: ,TID
@@ -563,21 +563,10 @@ CLEAR_ALL:
 	GuiControl, 99: Show, DESC_ISSUE_TEXT1
 	GuiControl, 99: Show, DESC_ISSUE
 	
-	GuiControl, 99: Move, STAT_DOWN, x228 y25	; x330 y143
+	GuiControl, 99: Move, STAT_DOWN, x228 y25
 	GuiControl, 99: Move, STAT_REDEMPTION, x448 y25
-	
-	;GuiControl, Move, STAT_DOWN, x230 y143
-	;GuiControl, Move, STAT_REDEMPTION, x450 y143
-	
-	
-	;SVC_TYPE := "FSK"
-	;SVC_TYPE_SUBJ := "FSK"
-	;GuiControlGet, STAT_ATM
-	
-	;MsgBox, CASE_DESC: %CASE_DESC%
 }
 return
-
 
 
 CurTime()
@@ -587,6 +576,12 @@ CurTime()
 	CurTime := A_Now
 	FormatTime, CurTime, CurTime, yyyy-MM-dd hh:mm:sstt
 	return
+}
+return
+
+99GuiClose:
+{
+	ExitApp
 }
 return
 
@@ -650,45 +645,324 @@ CurTime := A_Now
 FormatTime, CurTime, CurTime, yyyy-MM-dd hh:mm:sstt
 SetKeyDelay, 15
 
-Send,
-(
-{Home}%CurTime% (%GROUP%)
-CONTACT NAME:{Space 1}
-CONTACT PHONE:{Space 1}%PHONE%
-PROPERTY: %PROPERTY%{Space 1}
-CASE:{Space 1}
-ISSUE:{Space 1}
-TROUBLESHOOTING:{Space 1}
-RESOLUTION:{Space 1}
-____________________________________________________________
+CallInfo := 
+ClipboardBak := Clipboard
 
+Send {Home}
+
+CallInfo =
+(
+%CurTime% (%GROUP%)
+CONTACT NAME:%A_Space%
+CONTACT PHONE: %PHONE%
+PROPERTY: %PROPERTY%
+CASE:%A_Space%
+ISSUE:%A_Space%
+TROUBLESHOOTING:%A_Space%
+RESOLUTION:%A_Space%
+____________________________________________________________
 
 )
 
+if WinActive("ahk_class OpusApp")
+{
+	CallInfo := RegExReplace(CallInfo, "`r`n","`n") ; Carriage Return and Line Feed to Line Feed
+	CallInfo := RegExReplace(CallInfo, "`n","`r`n") ; Line Feed to Carriage Return and Line Feed
+	CallInfo := RegExReplace(CallInfo, "`r`n","{LShift down}{Enter}{LShift up}") ; Carriage Return and Line 
+	Clipboard := CallInfo
+	Send %CallInfo%
+}
+else
+{
+	CallInfo := RegExReplace(CallInfo, "`r`n","`n") ; Carriage Return and Line Feed to Line Feed
+	CallInfo := RegExReplace(CallInfo, "`n","`r`n") ; Line Feed to Carriage Return and Line Feed
+	Clipboard := CallInfo
+	Send {Ctrl down}v{Ctrl up}
+}
+
+Sleep 150
+Clipboard := ClipboardBak
 Sleep, 100
-Send, {Up 9}{End}
+Send, {Up 8}{End}
 SetKeyDelay, 0
+
 return
 
 
 
-^!R::reload
-MsgBox reloaded
+^3::	; Copy info from TechOps Case Builder to Clipify
+SetKeyDelay, 0
+
+EleName := "WindowsForms10.EDIT.app.0.141b42a_r14_ad12"
+ElePhone := "WindowsForms10.EDIT.app.0.141b42a_r14_ad11"
+EleMerchant := "Edit2"
+EleService := "WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad13"
+EleSummary := "WindowsForms10.EDIT.app.0.141b42a_r14_ad13"
+EleNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad14"
+
+WinActivate, Clipify
+ControlSetText, %EleName%, %UNAME%, Clipify
+ControlSetText, %ElePhone%, %UPHONE%, Clipify
+ControlSetText, %EleMerchant%, %SITENAME%, Clipify
+Control, ChooseString, %SVC_TYPE_SUBJ%, %EleService%, Clipify
+;ControlSetText, %EleSummary%, %DESC_SUB%, Clipify
+ControlSetText, %EleSummary%, %ClipifySubject%, Clipify
+ControlSetText, %EleNotes%, `r`n%CASE_DESC%, Clipify
+
 return
 
 
 
-^F7::
-TEST := "   	000000237509    	"
-TEST := RegExReplace(TEST, "^\s+", "")  ; (Strip leading spaces)
-TEST := RegExReplace(TEST, "\s+$", "")  ; (Strip trailing spaces)
-TEST := RegExReplace(TEST, "^0+", "")	; (Strip leading zeros)
-MsgBox, ***%TEST%***
+^4::	; Copy case info from Clipify to Salesforce
+SetKeyDelay, 0
+
+FoundX :=
+FoundY :=
+ClipifyName := 
+ClipifyPhone := 
+ClipifyMerchant := 
+ClipifyService := 
+ClipifySummary := 
+ClipifySubject := 
+ClipifyPreNotes := 
+ClipifyOngoingNotes := 
+ClipifyNotes := 
+
+Resources := "Resources" ; Location of resource files
+
+EleName := "WindowsForms10.EDIT.app.0.141b42a_r14_ad12"
+ElePhone := "WindowsForms10.EDIT.app.0.141b42a_r14_ad11"
+EleMerchant := "Edit2"
+EleService := "WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad13"
+EleSummary := "WindowsForms10.EDIT.app.0.141b42a_r14_ad13"
+EleSubject := "WindowsForms10.EDIT.app.0.141b42a_r14_ad14"
+ElePreNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad13"
+EleOngoingNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad14"
+
+ControlGetText, ClipifyName, %EleName%, Clipify
+ControlGetText, ClipifyPhone, %ElePhone%, Clipify
+ControlGetText, ClipifyMerchant, %EleMerchant%, Clipify
+ControlGet, ClipifyService, Choice, , %EleService%, Clipify
+ControlGetText, ClipifySummary, %EleSummary%, Clipify
+ControlGetText, ClipifySubject, %EleSubject%, Clipify
+ControlGetText, ClipifyPreNotes, %ElePreNotes%, Clipify
+ControlGetText, ClipifyOngoingNotes, %EleOngoingNotes%, Clipify
+
+ClipifyNotes = 
+(
+%ClipifyPreNotes%
+Additional Notes:
+
+%ClipifyOngoingNotes%
+)
+ClipifyNotes := RegExReplace(ClipifyNotes, "`r`n","`n")
+;Clipboard := ClipifySubject . "`r`n`r`n" . ClipifyNotes
+
+WinMove, ahk_class Chrome_WidgetWin_1,, 2000, 10, 1600, 1000
+Send {LCtrl down}{Home}{LCtrl up}
+Sleep 150
+
+Salesforce.CaseDetails()
+
+; FILL IN: Status, Severity Level
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 222, 354, 544, 582, *150 %Resources%\Status.jpg ; (x440 y450)
+}
+If ErrorLevel = 0
+{
+	; Status
+	FoundX := FoundX+75
+	FoundY := FoundY+10
+	Click, %FoundX%, %FoundY% Left, 1
+	Send %CaseStatus%{Enter}
+	Sleep 150
+
+	; Severity Level
+	FoundY := FoundY+28
+	Click, %FoundX%, %FoundY% Left, 1
+	Send 4{Enter}
+	Sleep 150
+}
+
+; FILL IN: Case Origin
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 936, 475, 1204, 703, *150 %Resources%\CaseOrigin.jpg ; (x440 y450)
+}
+If ErrorLevel = 0
+{
+	; Case Origin
+	FoundX := FoundX+100
+	FoundY := FoundY+10
+	Click, %FoundX%, %FoundY% Left, 1
+	Send Phone{Enter}
+	Sleep 150
+}
+
+; FILL IN: Caller Name, Caller Phone
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 936, 475, 1204, 703, *150 %Resources%\CallerName.jpg ; (x1050 y571)
+}
+If ErrorLevel = 0
+{
+	; Caller Name
+	FoundX := FoundX+130
+	FoundY := FoundY+10
+	Click, %FoundX%, %FoundY% Left, 1
+	Send {LCtrl down}a{LCtrl up}{Del}
+	Sleep 50
+	Send %ClipifyName%
+	Sleep 150
+	Send {Esc}
+	Sleep 150
+	
+	; Caller Phone
+	FoundY := FoundY+28
+	Click, %FoundX%, %FoundY% Left, 1
+	Send {LCtrl down}a{LCtrl up}{Del}
+	Sleep 50
+	Send %ClipifyPhone%
+	Sleep 150
+	Send {Esc}
+	Sleep 150
+}
+
+; FILL IN: Subject
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 216, 758, 588, 1000, *150 %Resources%\Subject.jpg ; (x434 y854)
+}
+If ErrorLevel = 0
+{
+	; Subject
+	FoundX := FoundX+100
+	FoundY := FoundY+10
+	Click, %FoundX%, %FoundY% Left, 1
+	Send {LCtrl down}a{LCtrl up}{Del}
+	Sleep 150
+	SendRaw %ClipifySubject%
+	Sleep 300
+	Send {Esc}
+	Sleep 150
+	
+	; Description
+	FoundY := FoundY+28
+	Click, %FoundX%, %FoundY% Left, 1
+	Send {LCtrl down}a{LCtrl up}{Del}
+	Sleep 150
+	SendRaw %ClipifyNotes%
+	Sleep 300
+	Send {Esc}
+	Sleep 150
+}
+
+	FoundX := FoundX-150
+	Click, %FoundX%, %FoundY% Left, 1
+	Sleep 50
+	Send {PgDn}
+	Sleep 150
+	
+; FILL IN: Case Details
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
+}
+If ErrorLevel = 0
+{
+	; Type
+	FoundX := FoundX+100
+	FoundY := FoundY+10
+	Click, %FoundX%, %FoundY% Left, 1
+	Send Problem{Enter}
+	Sleep 150
+	
+	; Vendor
+	FoundY := FoundY+25
+	Click, %FoundX%, %FoundY% Left, 1
+	Send Everi{Enter}
+	Sleep 150
+	
+	; Product Family
+	FoundY := FoundY+25
+	if (ProductFamily != "")
+	{
+		Click, %FoundX%, %FoundY% Left, 1
+		Send %ProductFamily%{Enter}
+		Sleep 150
+	}
+	
+	; Case Reason
+	FoundY := FoundY+25
+	if (CaseReason != "")
+	{
+		Click, %FoundX%, %FoundY% Left, 1
+		Send %CaseReason%{Enter}
+		Sleep 150
+	}
+	
+	; Root Cause 1
+	FoundY := FoundY+25
+	if (RootCause1 != "")
+	{
+		Click, %FoundX%, %FoundY% Left, 1
+		Send %RootCause1%{Enter}
+		Sleep 150
+	}
+	
+	; Root Cause 2
+	FoundY := FoundY+25
+	if (RootCause2 != "")
+	{
+		Click, %FoundX%, %FoundY% Left, 1
+		Send %RootCause2%{Enter}
+		Sleep 150
+	}
+}
+
+;Send {LCtrl down}{Home}{LCtrl up}
+
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
+}
+If ErrorLevel = 0
+{
+	; Type
+	FoundX := FoundX-25
+	FoundY := FoundY+5
+	Click, %FoundX%, %FoundY% Left, 1
+	Send {Up 5}
+	Sleep 150
+}
+
+
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 450, 110, 800, 280, *150 %Resources%\SrchIcon.jpg ; (x434 y854)
+}
+If ErrorLevel = 0
+{
+	; Type
+	FoundX := FoundX+10
+	FoundY := FoundY+5
+	Click, %FoundX%, %FoundY% Left, 0
+	Sleep 150
+}
+
 return
 
 
 
-^!I::
+^!P:: ; Generate a random 20 character password
 ID_CODE()
 {
 	global
@@ -737,7 +1011,9 @@ return
 
 
 
-
+^!R::reload
+MsgBox reloaded
+return
 
 
 
