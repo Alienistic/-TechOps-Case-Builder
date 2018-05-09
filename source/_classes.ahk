@@ -1,3 +1,196 @@
+class Salesforce
+{
+	CaseDetails()
+	{
+		global
+		Status :=
+		ProductFamily :=
+		CaseReason := 
+		RootCause1 := 
+		RootCause2 := 
+		
+		if (ClipifyService = "ARCA")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Currency Handling"
+			CaseReason := "ARCA Recyclers"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "ATM")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Cash Access"
+			CaseReason := "91x-ATM"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "CageXchange")
+		{
+			CaseStatus := "01-New"
+			ProductFamily := "Kiosk FSK"
+			CaseReason := "CageXchange"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "Call Center App")
+		{
+			If InStr(ClipifyMerchant, "Everi", false)
+			{
+				If InStr(ClipifySummary, "Authentication failure", false)
+				{
+					ClipifySubject := RegExReplace(ClipifySubject, "Call Center App", "AD")
+					CaseStatus := "01-Working"
+					ProductFamily := "Everi ID"
+					CaseReason := "Everi"
+					RootCause1 := "Password Reset"
+					RootCause2 := ""
+				}
+			}
+		}
+		
+		if (ClipifyService = "Cash Club")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Cash Access"
+			CaseReason := "Cash Club"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "Casino Direct")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Cash Access"
+			CaseReason := "Cash Club"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "CCI Legacy")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Central Credit"
+			CaseReason := "Central Credit (legacy)"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "CCI 2.0")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Central Credit"
+			CaseReason := "Central Credit 2.0"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "Check Prove")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Compliance Products"
+			CaseReason := "NEWave"
+			RootCause1 := "CheckProve"
+			RootCause2 := "--None--"
+		}
+		
+		if (ClipifyService = "EGM")
+		{
+			CaseStatus := "01-New"
+			ProductFamily := "Games"
+			CaseReason := "--None--"
+			RootCause1 := ""
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "EVERI Compliance")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Compliance Products"
+			CaseReason := "NEWave"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "Full-Service Kiosk")
+		{
+			CaseStatus := "01-New"
+			ProductFamily := "Kiosk FSK"
+			CaseReason := "Xchange FSK"
+			RootCause1 := "Xchange FSK Hardware"
+			RootCause2 := "--None--"
+		}
+		
+		if (ClipifyService = "Jackpot Dispense Unit")
+		{
+			CaseStatus := "01-New"
+			ProductFamily := "Kiosk JXC"
+			CaseReason := "JXC"
+			RootCause1 := "Xchange FSK Hardware"
+			RootCause2 := "--None--"
+		}
+		
+		if (ClipifyService = "Ticket Redemption Unit")
+		{
+			CaseStatus := "01-New"
+			ProductFamily := "Kiosk FSK"
+			CaseReason := "Xchange FSK"
+			RootCause1 := "Xchange FSK Hardware"
+			RootCause2 := "--None--"
+		}
+		
+		if (ClipifyService = "QuikCash")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Cash Access"
+			CaseReason := "Cash Club"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "Networking")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Payment Network"
+			CaseReason := "Networking"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "Resort Advantage")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Compliance Products"
+			CaseReason := "Resort Advantage"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		if (ClipifyService = "XE")
+		{
+			CaseStatus := "01-New"
+			ProductFamily := "Kiosk FSK"
+			CaseReason := "Xchange FSK"
+			RootCause1 := "Xchange FSK Software"
+			RootCause2 := "Xchange Explorer"
+		}
+		
+		if (ClipifyService = "XView")
+		{
+			CaseStatus := "10-Working"
+			ProductFamily := "Cash Access"
+			CaseReason := "Xview"
+			RootCause1 := "--None--"
+			RootCause2 := ""
+		}
+		
+		return
+	}
+}
+
 class xchange
 {
 	getposition()
@@ -46,7 +239,7 @@ class xchange
 	cleanfieldtext()
 	{
 		global
-		
+
 		If (GuiFieldPrev="UEMAIL")
 		{
 			GuiControlGet, UEMAIL
@@ -64,6 +257,25 @@ class xchange
 			SFCASE := RegExReplace(SFCASE, "\s+$", "")  ; (Strip trailing spaces)
 			SFCASE := RegExReplace(SFCASE, "^0+", "")	; (Strip leading zeros)
 			GuiControl, 99: ,SFCASE, %SFCASE%
+			;Send, {end}
+		}
+		
+		If (GuiFieldPrev="SITENAME")
+		{
+			GuiControlGet, SITENAME
+			SITENAME := RegExReplace(SITENAME, "^\s+", "")  ; (Strip leading spaces)
+			SITENAME := RegExReplace(SITENAME, "\s+$", "")  ; (Strip trailing spaces)
+			StringUpper SITENAME, SITENAME, U  ; (Upper case)
+			GuiControl, 99: ,SITENAME, %SITENAME%
+			;Send, {end}
+		}
+		
+		If (GuiFieldPrev="ALT_AVAILABILITY")
+		{
+			GuiControlGet, ALT_AVAILABILITY
+			ALT_AVAILABILITY := RegExReplace(ALT_AVAILABILITY, "^\s+", "")  ; (Strip leading spaces)
+			ALT_AVAILABILITY := RegExReplace(ALT_AVAILABILITY, "\s+$", "")  ; (Strip trailing spaces)
+			GuiControl, 99: ,ALT_AVAILABILITY, %ALT_AVAILABILITY%
 			;Send, {end}
 		}
 		
@@ -116,6 +328,16 @@ class xchange
 			GuiControl, 99: ,LOCATION, %LOCATION%
 			;Send, {end}
 		}
+
+		If (GuiFieldPrev="DESC_SUB")
+		{
+			GuiControlGet, DESC_SUB
+			DESC_SUB := RegExReplace(DESC_SUB, "^\s+", "")  ; (Strip leading spaces)
+			DESC_SUB := RegExReplace(DESC_SUB, "\s+$", "")  ; (Strip trailing spaces)
+			GuiControl, 99: ,DESC_SUB, %DESC_SUB%
+			;Send, {end}
+		}
+		
 	}
 	
 	guiopt()
@@ -614,10 +836,12 @@ class xchange
 					if (SFCASE!="")
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB " (SF#" SFCASE ")"
+						ClipifySubject := GAMENAME ", " DESC_SUB
 					}
 					else
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB
+						ClipifySubject := GAMENAME ", " DESC_SUB
 					}
 				}
 				else
@@ -625,10 +849,12 @@ class xchange
 					if (SFCASE!="")
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+						ClipifySubject := DESC_SUB
 					}
 					else
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB
+						ClipifySubject := DESC_SUB
 					}
 				}
 			}
@@ -639,10 +865,12 @@ class xchange
 					if (SFCASE!="")
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB " (SF#" SFCASE ")"
+						ClipifySubject := TID ", " DESC_SUB
 					}
 					else
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB
+						ClipifySubject := TID ", " DESC_SUB
 					}
 				}
 				else
@@ -650,10 +878,12 @@ class xchange
 					if (SFCASE!="")
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+						ClipifySubject := DESC_SUB
 					}
 					else
 					{
 						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB
+						ClipifySubject := DESC_SUB
 					}
 				}
 			}
@@ -730,6 +960,10 @@ class xchange
 			if (AVAILABILITY = "5PM-8AM After Hours")
 			{
 				SITE_AVAIL := "After hours 5:00PM - 8:00AM"
+			}
+			if (AVAILABILITY = "Standard Business Hours")
+			{
+				SITE_AVAIL := "Standard Business Hours"
 			}
 			if (AVAILABILITY = "Other")
 			{
@@ -881,20 +1115,25 @@ class xchange
 		; CASE DESCRIPTION
 		CASE_DESC := 
 		
-		if (UNAME != "")
-		{
-			CASE_DESC := CASE_DESC "CONTACT NAME: " . UNAME "`r`n"
-		}
-
-		if (UPHONE != "")
-		{
-			CASE_DESC := CASE_DESC "CONTACT PHONE: " . UPHONE "`r`n"
-		}
-
-		if (UNAME OR UPHONE != "")
-		{
-			CASE_DESC := CASE_DESC "`r`n"
-		}
+		;	if (UNAME != "")
+		;	{
+		;		CASE_DESC := CASE_DESC "CONTACT NAME: " . UNAME "`r`n"
+		;	}
+		;	
+		;	if (UEMAIL != "")
+		;	{
+		;		CASE_DESC := CASE_DESC "CONTACT EMAIL: " . UEMAIL "`r`n"
+		;	}
+        ;	
+		;	if (UPHONE != "")
+		;	{
+		;		CASE_DESC := CASE_DESC "CONTACT PHONE: " . UPHONE "`r`n"
+		;	}
+        ;	
+		;	if (UNAME OR UPHONE != "")
+		;	{
+		;		CASE_DESC := CASE_DESC "`r`n"
+		;	}
 		
 		if (DISPATCH != "")
 		{
