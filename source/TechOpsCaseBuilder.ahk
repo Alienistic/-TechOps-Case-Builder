@@ -30,8 +30,8 @@ IfExist, %SettingsINI%
 	}
 
 
-;VERSION := "2018.01.12.1645"
-VERSION := "2018.01.31.1654"
+;VERSION := "2018.01.31.1654"
+VERSION := "2018.03.22.1353"
 
 
 
@@ -748,6 +748,11 @@ ControlGetText, ClipifySubject, %EleSubject%, Clipify
 ControlGetText, ClipifyPreNotes, %ElePreNotes%, Clipify
 ControlGetText, ClipifyOngoingNotes, %EleOngoingNotes%, Clipify
 
+ClipifyPreNotes := RegExReplace(ClipifyPreNotes, "`r`n","`n") ;Convert CRLF to LF
+ClipifyPreNotes := ClipifyPreNotes "`n" ; Correct missing end line break
+ClipifyPreNotes := RegExReplace(ClipifyPreNotes, "`n`n","`n") ;Remove double line breaks
+;Clipboard := ClipifyPreNotes
+
 ClipifyNotes = 
 (
 %ClipifyPreNotes%
@@ -959,6 +964,71 @@ If ErrorLevel = 0
 }
 
 return
+
+
+
+
+^5::
+EMAIL_TEMPLATE_IN := A_ScriptDir "\Resources\email\EmailTemplateIN.htm"
+EMAIL_TEMPLATE_OUT := A_ScriptDir "\Resources\email\EmailTemplateOUT.htm"
+send_from := "supportoperations@everi.com"
+send_to_cc := "Everi Support Operations <supportoperations@everi.com>; "
+
+EleSubject := "WindowsForms10.EDIT.app.0.141b42a_r14_ad14"
+ControlGetText, ClipifySubject, %EleSubject%, Clipify
+
+FileCopy, %EMAIL_TEMPLATE_IN%, %EMAIL_TEMPLATE_OUT%,1
+
+EmailText := Clipboard
+FName := TF_Find(EmailText, "1", "0", "CONTACT NAME:", 1, 1)
+FName := RegExReplace(FName, "^(CONTACT NAME: {1})(.*$)", "$2") ;Working!
+FName := RegExReplace(FName, "`r`n.*", "") ;Working!
+FName := RegExReplace(FName, "\s.*", "") ;Working!
+StringUpper FName, FName, T  ; (Title case)
+
+EmailText := RegExReplace(EmailText, "im)^([a-zA-Z].*?:{1})(.*$)", "<b style='mso-bidi-font-weight:normal'><span style='color:#1F497D'>$1</span></b><span style='color:red'>$2</span>")
+
+EmailText := RegExReplace(EmailText, "im)^(\*\*\*.*$)", "<b style='mso-bidi-font-weight:normal'><span style='color:#1F497D'>$1</span></b>")
+
+EmailText := RegExReplace(EmailText, "im)^(.*)$", "<p class=MsoNormal><o:p>$1</o:p></p>")
+
+TF_Replace("!"EMAIL_TEMPLATE_OUT,"EmailText",EmailText)
+TF_Replace("!"EMAIL_TEMPLATE_OUT,"FName",FName)
+
+;############### HTML Message Body ##############
+FileRead, template_master, %EMAIL_TEMPLATE_OUT%
+
+html=
+(
+%template_master%
+)
+
+;############### COM ##############
+m := ComObjActive("Outlook.Application").CreateItem(0)
+m.Subject := ClipifySubject			    ; <---- Subject -----
+m.SentOnBehalfOfName := send_from       ; <---- Sender -----
+m.To := send_to                         ; <---- Recipient -----
+m.CC := send_to_cc                      ; <---- Recipient CC -----
+m.Display
+m.HTMLBody := html                      ; <---- Email message body -----
+
+Sleep 150
+Click, x12, y335 Left, 1
+
+Sleep 150
+Send, {Control down}{end}{Control up}
+
+Sleep 150
+SetControlDelay -1
+ControlClick, x650 y96, ahk_class rctrl_renwnd32,,,, NA
+
+Sleep 150
+Send, {down}{enter}
+
+Sleep 150
+Send, {Control down}{home}{Control up}{end}
+
+Return
 
 
 
