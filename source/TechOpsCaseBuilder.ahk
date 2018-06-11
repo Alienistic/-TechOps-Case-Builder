@@ -605,14 +605,14 @@ if (WINTITLE != "Interaction desktop")
 	{
 		;MouseClick, left, 75, 45
 		MouseClick, left, 75, 95
-		Sleep, 10
+		Sleep, 250
 		;MouseClick, left, 75, 100, 2
-		MouseClick, left, 75, 150, 2
-		Sleep, 10
+		MouseClick, left, 30, 125, 2
+		Sleep, 250
 		Send {LCtrl Down}a{LCtrl Up}
-		Sleep, 10
+		Sleep, 250
 		Send, {LCtrl Down}c{LCtrl Up}
-		Sleep, 100
+		Sleep, 50
 		LOG := Clipboard
 		
 		;WINTITLE_FILE := "C:\Users\mcrane\Downloads\Autohotkey scrips\WINTITLE.txt"
