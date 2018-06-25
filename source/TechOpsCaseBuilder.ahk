@@ -1012,20 +1012,22 @@ m.CC := send_to_cc                      ; <---- Recipient CC -----
 m.Display
 m.HTMLBody := html                      ; <---- Email message body -----
 
-Sleep 150
-Click, x12, y335 Left, 1
+WinActivate, ahk_class rctrl_renwnd32
 
-Sleep 150
+Sleep 300
+Click, x20, y345 Left, 1
+
+Sleep 300
 Send, {Control down}{end}{Control up}
 
-Sleep 150
+Sleep 300
 SetControlDelay -1
 ControlClick, x650 y96, ahk_class rctrl_renwnd32,,,, NA
 
-Sleep 150
+Sleep 300
 Send, {down}{enter}
 
-Sleep 150
+Sleep 300
 Send, {Control down}{home}{Control up}{end}
 
 Return
