@@ -739,8 +739,6 @@ EleSubject := "WindowsForms10.EDIT.app.0.12ab327_r14_ad14"
 ElePreNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad13"
 EleOngoingNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad14"
 
-141b42a_r14_ad14
-
 ControlGetText, ClipifyName, %EleName%, Clipify
 ControlGetText, ClipifyPhone, %ElePhone%, Clipify
 ControlGetText, ClipifyMerchant, %EleMerchant%, Clipify
