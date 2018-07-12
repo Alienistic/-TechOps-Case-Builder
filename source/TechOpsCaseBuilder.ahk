@@ -693,12 +693,12 @@ return
 ^3::	; Copy info from TechOps Case Builder to Clipify
 SetKeyDelay, 0
 
-EleName := "WindowsForms10.EDIT.app.0.141b42a_r14_ad12"
-ElePhone := "WindowsForms10.EDIT.app.0.141b42a_r14_ad11"
+EleName := "WindowsForms10.EDIT.app.0.12ab327_r14_ad12"
+ElePhone := "WindowsForms10.EDIT.app.0.12ab327_r14_ad11"
 EleMerchant := "Edit2"
-EleService := "WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad13"
-EleSummary := "WindowsForms10.EDIT.app.0.141b42a_r14_ad13"
-EleNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad14"
+EleService := "WindowsForms10.COMBOBOX.app.0.12ab327_r14_ad13"
+EleSummary := "WindowsForms10.EDIT.app.0.12ab327_r14_ad13"
+EleNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad14"
 
 WinActivate, Clipify
 ControlSetText, %EleName%, %UNAME%, Clipify
@@ -730,14 +730,14 @@ ClipifyNotes :=
 
 Resources := "Resources" ; Location of resource files
 
-EleName := "WindowsForms10.EDIT.app.0.141b42a_r14_ad12"
-ElePhone := "WindowsForms10.EDIT.app.0.141b42a_r14_ad11"
+EleName := "WindowsForms10.EDIT.app.0.12ab327_r14_ad12"
+ElePhone := "WindowsForms10.EDIT.app.0.12ab327_r14_ad11"
 EleMerchant := "Edit2"
-EleService := "WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad13"
-EleSummary := "WindowsForms10.EDIT.app.0.141b42a_r14_ad13"
-EleSubject := "WindowsForms10.EDIT.app.0.141b42a_r14_ad14"
-ElePreNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad13"
-EleOngoingNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad14"
+EleService := "WindowsForms10.COMBOBOX.app.0.12ab327_r14_ad13"
+EleSummary := "WindowsForms10.EDIT.app.0.12ab327_r14_ad13"
+EleSubject := "WindowsForms10.EDIT.app.0.12ab327_r14_ad14"
+ElePreNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad13"
+EleOngoingNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad14"
 
 ControlGetText, ClipifyName, %EleName%, Clipify
 ControlGetText, ClipifyPhone, %ElePhone%, Clipify
@@ -974,7 +974,7 @@ EMAIL_TEMPLATE_OUT := A_ScriptDir "\Resources\email\EmailTemplateOUT.htm"
 send_from := "supportoperations@everi.com"
 send_to_cc := "Everi Support Operations <supportoperations@everi.com>; "
 
-EleSubject := "WindowsForms10.EDIT.app.0.141b42a_r14_ad14"
+EleSubject := "WindowsForms10.EDIT.app.0.12ab327_r14_ad14"
 ControlGetText, ClipifySubject, %EleSubject%, Clipify
 
 FileCopy, %EMAIL_TEMPLATE_IN%, %EMAIL_TEMPLATE_OUT%,1
