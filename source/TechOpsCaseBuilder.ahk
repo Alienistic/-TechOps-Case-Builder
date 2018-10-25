@@ -31,7 +31,7 @@ IfExist, %SettingsINI%
 
 
 ;VERSION := "2018.01.31.1654"
-VERSION := "2018.07.12.0810"
+VERSION := "2018.10.25.1332"
 
 
 
@@ -655,6 +655,7 @@ CallInfo =
 %CurTime% (%GROUP%)
 CONTACT NAME:%A_Space%
 CONTACT PHONE: %PHONE%
+CONTACT EMAIL:%A_Space%
 PROPERTY: %PROPERTY%
 CASE:%A_Space%
 ISSUE:%A_Space%
@@ -718,6 +719,9 @@ SetKeyDelay, 0
 
 FoundX :=
 FoundY :=
+UEMAIL :=
+CaseRecordType :=
+
 ClipifyName := 
 ClipifyPhone := 
 ClipifyMerchant := 
@@ -769,6 +773,63 @@ Sleep 150
 
 Salesforce.CaseDetails()
 
+
+; DETECT: Case Record Type 	x1138 y432 | 1157 436
+Loop, 5
+{
+    CoordMode, Pixel, Client
+    ImageSearch, FoundX, FoundY, 936, 392, 1204, 703, *150 %Resources%\CaseRecordType.jpg ; (x440 y450)
+}
+If ErrorLevel = 0
+{
+	; Case Record Type
+	FoundX := FoundX+136
+	FoundY := FoundY+5
+	Click, %FoundX%, %FoundY% Left, 1
+	Click 2
+	Sleep 150
+	Send {LCtrl down}c{LCtrl up}
+	Sleep 150
+	CaseRecordType := Clipboard
+	CaseRecordType := RegExReplace(CaseRecordType, "^\s+", "")  ; (Strip leading spaces)
+	CaseRecordType := RegExReplace(CaseRecordType, "\s+$", "")  ; (Strip trailing spaces)
+	CaseRecordType := RegExReplace(CaseRecordType, "`r`n.*", "")
+	CaseRecordType := RegExReplace(CaseRecordType, "`r`n", "")
+	Clipboard := CaseRecordType
+}
+
+; FILL IN: Contact Email  442, 607
+if (CaseRecordType = "LVHD")
+{
+	WinGetClass, WINclass, A
+	InputBox, UEMAIL, Contact Email Required, , , 250, 100
+	if (UEMAIL = "")
+	{
+		UEMAIL := "0"
+	}
+	WinActivate, ahk_class %WINclass%
+	
+	Loop, 5
+	{
+		CoordMode, Pixel, Client
+		ImageSearch, FoundX, FoundY, 222, 570, 544, 670, *150 %Resources%\Email.jpg ; (x440 y450)
+	}
+	If ErrorLevel = 0
+	{
+		; Caller Email
+		FoundX := FoundX+130
+		FoundY := FoundY+10
+		Click, %FoundX%, %FoundY% Left, 1
+		Send {LCtrl down}a{LCtrl up}{Del}
+		Sleep 50
+		Send %UEMAIL%
+		Sleep 150
+		Send {Esc}
+		Sleep 150
+	}
+}
+
+
 ; FILL IN: Status, Severity Level
 Loop, 5
 {
@@ -790,6 +851,8 @@ If ErrorLevel = 0
 	Send 4{Enter}
 	Sleep 150
 }
+
+
 
 ; FILL IN: Case Origin
 Loop, 5
@@ -971,8 +1034,8 @@ return
 ^5::
 EMAIL_TEMPLATE_IN := A_ScriptDir "\Resources\email\EmailTemplateIN.htm"
 EMAIL_TEMPLATE_OUT := A_ScriptDir "\Resources\email\EmailTemplateOUT.htm"
-send_from := "supportoperations@everi.com"
-send_to_cc := "Everi Support Operations <supportoperations@everi.com>; "
+send_from := "mcrane@everi.com"
+;send_to_cc := "Everi Support Operations <supportoperations@everi.com>; "
 
 EleSubject := "WindowsForms10.EDIT.app.0.12ab327_r14_ad14"
 ControlGetText, ClipifySubject, %EleSubject%, Clipify
@@ -1008,7 +1071,7 @@ m := ComObjActive("Outlook.Application").CreateItem(0)
 m.Subject := ClipifySubject			    ; <---- Subject -----
 m.SentOnBehalfOfName := send_from       ; <---- Sender -----
 m.To := send_to                         ; <---- Recipient -----
-m.CC := send_to_cc                      ; <---- Recipient CC -----
+;m.CC := send_to_cc                      ; <---- Recipient CC -----
 m.Display
 m.HTMLBody := html                      ; <---- Email message body -----
 
