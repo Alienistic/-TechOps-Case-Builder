@@ -31,7 +31,7 @@ IfExist, %SettingsINI%
 
 
 ;VERSION := "2018.01.31.1654"
-VERSION := "2018.10.25.1332"
+VERSION := "2018.10.29.0803"
 
 
 
@@ -684,7 +684,7 @@ else
 Sleep 150
 Clipboard := ClipboardBak
 Sleep, 100
-Send, {Up 8}{End}
+Send, {Up 9}{End}
 SetKeyDelay, 0
 
 return
