@@ -30,8 +30,8 @@ IfExist, %SettingsINI%
 	}
 
 
-;VERSION := "2018.01.31.1654"
-VERSION := "2018.10.29.0803"
+;VERSION := "2019.03.11.0735"
+VERSION := "2019.03.26.0502"
 
 
 
@@ -694,12 +694,12 @@ return
 ^3::	; Copy info from TechOps Case Builder to Clipify
 SetKeyDelay, 0
 
-EleName := "WindowsForms10.EDIT.app.0.12ab327_r14_ad12"
-ElePhone := "WindowsForms10.EDIT.app.0.12ab327_r14_ad11"
+EleName := "WindowsForms10.EDIT.app.0.141b42a_r14_ad12"
+ElePhone := "WindowsForms10.EDIT.app.0.141b42a_r14_ad11"
 EleMerchant := "Edit2"
-EleService := "WindowsForms10.COMBOBOX.app.0.12ab327_r14_ad13"
-EleSummary := "WindowsForms10.EDIT.app.0.12ab327_r14_ad13"
-EleNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad14"
+EleService := "WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad13"
+EleSummary := "WindowsForms10.EDIT.app.0.141b42a_r14_ad13"
+EleNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad14"
 
 WinActivate, Clipify
 ControlSetText, %EleName%, %UNAME%, Clipify
@@ -734,14 +734,14 @@ ClipifyNotes :=
 
 Resources := "Resources" ; Location of resource files
 
-EleName := "WindowsForms10.EDIT.app.0.12ab327_r14_ad12"
-ElePhone := "WindowsForms10.EDIT.app.0.12ab327_r14_ad11"
+EleName := "WindowsForms10.EDIT.app.0.141b42a_r14_ad12"
+ElePhone := "WindowsForms10.EDIT.app.0.141b42a_r14_ad11"
 EleMerchant := "Edit2"
-EleService := "WindowsForms10.COMBOBOX.app.0.12ab327_r14_ad13"
-EleSummary := "WindowsForms10.EDIT.app.0.12ab327_r14_ad13"
-EleSubject := "WindowsForms10.EDIT.app.0.12ab327_r14_ad14"
-ElePreNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad13"
-EleOngoingNotes := "WindowsForms10.RichEdit20W.app.0.12ab327_r14_ad14"
+EleService := "WindowsForms10.COMBOBOX.app.0.141b42a_r14_ad13"
+EleSummary := "WindowsForms10.EDIT.app.0.141b42a_r14_ad13"
+EleSubject := "WindowsForms10.EDIT.app.0.141b42a_r14_ad14"
+ElePreNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad13"
+EleOngoingNotes := "WindowsForms10.RichEdit20W.app.0.141b42a_r14_ad14"
 
 ControlGetText, ClipifyName, %EleName%, Clipify
 ControlGetText, ClipifyPhone, %ElePhone%, Clipify
@@ -805,7 +805,7 @@ if (CaseRecordType = "LVHD")
 	InputBox, UEMAIL, Contact Email Required, , , 250, 100
 	if (UEMAIL = "")
 	{
-		UEMAIL := "0"
+		UEMAIL := "null@null.com"
 	}
 	WinActivate, ahk_class %WINclass%
 	
