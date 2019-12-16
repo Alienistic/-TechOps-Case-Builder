@@ -691,6 +691,57 @@ return
 
 
 
+^+2:: ; Paste blank email call
+CurTime := A_Now
+FormatTime, CurTime, CurTime, yyyy-MM-dd hh:mm:sstt
+SetKeyDelay, 15
+
+CallInfo := 
+ClipboardBak := Clipboard
+
+Send {Home}
+
+CallInfo =
+(
+%CurTime% (Email)
+CONTACT NAME:%A_Space%
+CONTACT PHONE:%A_Space%
+CONTACT EMAIL:%A_Space%
+PROPERTY:%A_Space%
+CASE:%A_Space%
+ISSUE:%A_Space%
+TROUBLESHOOTING:%A_Space%
+RESOLUTION:%A_Space%
+____________________________________________________________
+
+)
+
+if WinActive("ahk_class OpusApp")
+{
+	CallInfo := RegExReplace(CallInfo, "`r`n","`n") ; Carriage Return and Line Feed to Line Feed
+	CallInfo := RegExReplace(CallInfo, "`n","`r`n") ; Line Feed to Carriage Return and Line Feed
+	CallInfo := RegExReplace(CallInfo, "`r`n","{LShift down}{Enter}{LShift up}") ; Carriage Return and Line 
+	Clipboard := CallInfo
+	Send %CallInfo%
+}
+else
+{
+	CallInfo := RegExReplace(CallInfo, "`r`n","`n") ; Carriage Return and Line Feed to Line Feed
+	CallInfo := RegExReplace(CallInfo, "`n","`r`n") ; Line Feed to Carriage Return and Line Feed
+	Clipboard := CallInfo
+	Send {Ctrl down}v{Ctrl up}
+}
+
+Sleep 150
+Clipboard := ClipboardBak
+Sleep, 100
+Send, {Up 9}{End}
+SetKeyDelay, 0
+
+return
+
+
+
 ^3::	; Copy info from TechOps Case Builder to Clipify
 SetKeyDelay, 0
 
@@ -767,264 +818,41 @@ Additional Notes:
 ClipifyNotes := RegExReplace(ClipifyNotes, "`r`n","`n")
 ;Clipboard := ClipifySubject . "`r`n`r`n" . ClipifyNotes
 
-WinMove, ahk_class Chrome_WidgetWin_1,, 2000, 10, 1600, 1000
-Send {LCtrl down}{Home}{LCtrl up}
-Sleep 150
 
+WinGetClass, WIN_CLASS, A ; Detect which browser is selected
+if (WIN_CLASS = "Chrome_WidgetWin_1")
+	{
+		BROWSER := "Chrome"
+	}
+else if (WIN_CLASS = "MozillaWindowClass")
+	{
+		BROWSER := "Firefox"
+	}
+else
+	{
+		BROWSER := ""
+		MsgBox Chrome or Firefox Browser not selected
+		return
+	}
+	
+; Set which dropdown options to select
 Salesforce.CaseDetails()
 
-
-; DETECT: Case Record Type 	x1138 y432 | 1157 436
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 936, 392, 1204, 703, *150 %Resources%\CaseRecordType.jpg ; (x440 y450)
-}
-If ErrorLevel = 0
-{
-	; Case Record Type
-	FoundX := FoundX+136
-	FoundY := FoundY+5
-	Click, %FoundX%, %FoundY% Left, 1
-	Click 2
-	Sleep 150
-	Send {LCtrl down}c{LCtrl up}
-	Sleep 150
-	CaseRecordType := Clipboard
-	CaseRecordType := RegExReplace(CaseRecordType, "^\s+", "")  ; (Strip leading spaces)
-	CaseRecordType := RegExReplace(CaseRecordType, "\s+$", "")  ; (Strip trailing spaces)
-	CaseRecordType := RegExReplace(CaseRecordType, "`r`n.*", "")
-	CaseRecordType := RegExReplace(CaseRecordType, "`r`n", "")
-	Clipboard := CaseRecordType
-}
-
-; FILL IN: Contact Email  442, 607
-if (CaseRecordType = "LVHD")
-{
-	WinGetClass, WINclass, A
-	InputBox, UEMAIL, Contact Email Required, , , 250, 100
-	if (UEMAIL = "")
+if (BROWSER = "Chrome")
 	{
-		UEMAIL := "null@null.com"
-	}
-	WinActivate, ahk_class %WINclass%
-	
-	Loop, 5
-	{
-		CoordMode, Pixel, Client
-		ImageSearch, FoundX, FoundY, 222, 570, 544, 670, *150 %Resources%\Email.jpg ; (x440 y450)
-	}
-	If ErrorLevel = 0
-	{
-		; Caller Email
-		FoundX := FoundX+130
-		FoundY := FoundY+10
-		Click, %FoundX%, %FoundY% Left, 1
-		Send {LCtrl down}a{LCtrl up}{Del}
-		Sleep 50
-		Send %UEMAIL%
+		WinMove, ahk_class Chrome_WidgetWin_1,, 2000, 10, 1600, 1000
+		Send {LCtrl down}{Home}{LCtrl up}
 		Sleep 150
-		Send {Esc}
-		Sleep 150
+		Salesforce.Chrome()
 	}
-}
-
-
-; FILL IN: Status, Severity Level
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 222, 354, 544, 582, *150 %Resources%\Status.jpg ; (x440 y450)
-}
-If ErrorLevel = 0
-{
-	; Status
-	FoundX := FoundX+75
-	FoundY := FoundY+10
-	Click, %FoundX%, %FoundY% Left, 1
-	Send %CaseStatus%{Enter}
-	Sleep 150
-
-	; Severity Level
-	FoundY := FoundY+28
-	Click, %FoundX%, %FoundY% Left, 1
-	Send 4{Enter}
-	Sleep 150
-}
-
-
-
-; FILL IN: Case Origin
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 936, 475, 1204, 703, *150 %Resources%\CaseOrigin.jpg ; (x440 y450)
-}
-If ErrorLevel = 0
-{
-	; Case Origin
-	FoundX := FoundX+100
-	FoundY := FoundY+10
-	Click, %FoundX%, %FoundY% Left, 1
-	Send Phone{Enter}
-	Sleep 150
-}
-
-; FILL IN: Caller Name, Caller Phone
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 936, 475, 1204, 703, *150 %Resources%\CallerName.jpg ; (x1050 y571)
-}
-If ErrorLevel = 0
-{
-	; Caller Name
-	FoundX := FoundX+130
-	FoundY := FoundY+10
-	Click, %FoundX%, %FoundY% Left, 1
-	Send {LCtrl down}a{LCtrl up}{Del}
-	Sleep 50
-	Send %ClipifyName%
-	Sleep 150
-	Send {Esc}
-	Sleep 150
-	
-	; Caller Phone
-	FoundY := FoundY+28
-	Click, %FoundX%, %FoundY% Left, 1
-	Send {LCtrl down}a{LCtrl up}{Del}
-	Sleep 50
-	Send %ClipifyPhone%
-	Sleep 150
-	Send {Esc}
-	Sleep 150
-}
-
-; FILL IN: Subject
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 216, 758, 588, 1000, *150 %Resources%\Subject.jpg ; (x434 y854)
-}
-If ErrorLevel = 0
-{
-	; Subject
-	FoundX := FoundX+100
-	FoundY := FoundY+10
-	Click, %FoundX%, %FoundY% Left, 1
-	Send {LCtrl down}a{LCtrl up}{Del}
-	Sleep 150
-	SendRaw %ClipifySubject%
-	Sleep 300
-	Send {Esc}
-	Sleep 150
-	
-	; Description
-	FoundY := FoundY+28
-	Click, %FoundX%, %FoundY% Left, 1
-	Send {LCtrl down}a{LCtrl up}{Del}
-	Sleep 150
-	SendRaw %ClipifyNotes%
-	Sleep 300
-	Send {Esc}
-	Sleep 150
-}
-
-	FoundX := FoundX-150
-	Click, %FoundX%, %FoundY% Left, 1
-	Sleep 50
-	Send {PgDn}
-	Sleep 150
-	
-; FILL IN: Case Details
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
-}
-If ErrorLevel = 0
-{
-	; Type
-	FoundX := FoundX+100
-	FoundY := FoundY+10
-	Click, %FoundX%, %FoundY% Left, 1
-	Send Problem{Enter}
-	Sleep 150
-	
-	; Vendor
-	FoundY := FoundY+25
-	Click, %FoundX%, %FoundY% Left, 1
-	Send Everi{Enter}
-	Sleep 150
-	
-	; Product Family
-	FoundY := FoundY+25
-	if (ProductFamily != "")
+else if (BROWSER = "Firefox")
 	{
-		Click, %FoundX%, %FoundY% Left, 1
-		Send %ProductFamily%{Enter}
+		WinMove, ahk_class MozillaWindowClass,, 2000, 10, 1600, 1000
+		Send {LCtrl down}{Home}{LCtrl up}
 		Sleep 150
+		Salesforce.Firefox()
+		;MsgBox Firefox compatibility not enabled yet
 	}
-	
-	; Case Reason
-	FoundY := FoundY+25
-	if (CaseReason != "")
-	{
-		Click, %FoundX%, %FoundY% Left, 1
-		Send %CaseReason%{Enter}
-		Sleep 150
-	}
-	
-	; Root Cause 1
-	FoundY := FoundY+25
-	if (RootCause1 != "")
-	{
-		Click, %FoundX%, %FoundY% Left, 1
-		Send %RootCause1%{Enter}
-		Sleep 150
-	}
-	
-	; Root Cause 2
-	FoundY := FoundY+25
-	if (RootCause2 != "")
-	{
-		Click, %FoundX%, %FoundY% Left, 1
-		Send %RootCause2%{Enter}
-		Sleep 150
-	}
-}
-
-;Send {LCtrl down}{Home}{LCtrl up}
-
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
-}
-If ErrorLevel = 0
-{
-	; Type
-	FoundX := FoundX-25
-	FoundY := FoundY+5
-	Click, %FoundX%, %FoundY% Left, 1
-	Send {Up 5}
-	Sleep 150
-}
-
-
-Loop, 5
-{
-    CoordMode, Pixel, Client
-    ImageSearch, FoundX, FoundY, 450, 110, 800, 280, *150 %Resources%\SrchIcon.jpg ; (x434 y854)
-}
-If ErrorLevel = 0
-{
-	; Type
-	FoundX := FoundX+10
-	FoundY := FoundY+5
-	Click, %FoundX%, %FoundY% Left, 0
-	Sleep 150
-}
 
 return
 
@@ -1148,6 +976,45 @@ return
 
 ^!R::reload
 MsgBox reloaded
+return
+
+
+^9::
+; Select rectangle to get X Y X Y coordinates
+WinGetActiveStats, Title, Width, Height, WinX, WinY
+;MsgBox %WinX%, %WinY%
+;return
+
+KeyWait, LButton, D
+MouseGetPos, x1, y1
+
+Xn := "X" . WinX+x1		;X coords
+Yn := "Y" . WinY+y1		;Y coords
+Wn := "W" . 115	;Width
+Hn := "H" . 35	;Height
+
+SplashImage,, b fs8 %Xn% %Yn% %Wn% %Hn% CWFF0000 CTFFFFFF,Press ESC to make`n2nd X Y selection,,SplashWin
+WinSet, Transparent, 50, SplashWin
+KeyWait, ESC, D
+SplashImage, Off
+
+Sleep 200
+KeyWait, LButton, D
+MouseGetPos, x2, y2
+Clipboard := x1 . ", " . y1 . ", " . x2 . ", " . y2
+
+Xn := "X" . WinX+x1		;X coords
+Yn := "Y" . WinY+y1		;Y coords
+Wn := "W" . x2-x1	;Width
+Hn := "H" . y2-y1	;Height
+
+SplashImage,, b fs8 %Xn% %Yn% %Wn% %Hn% CWFF0000 CTFFFFFF,Press ESC,,SplashWin
+WinSet, Transparent, 50, SplashWin
+;Sleep, 4000
+KeyWait, ESC, D
+SplashImage, Off
+
+Msgbox,,, Coords copied to clipboard`n`n%Clipboard%, 6
 return
 
 
