@@ -189,6 +189,542 @@ class Salesforce
 		
 		return
 	}
+	
+	Chrome()
+	{
+		global
+		
+		; DETECT: Case Record Type 	x1138 y432 | 1157 436
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 936, 392, 1204, 703, *150 %Resources%\CaseRecordType.jpg ; (x440 y450)
+		}
+		If ErrorLevel = 0
+		{
+			; Case Record Type
+			FoundX := FoundX+136
+			FoundY := FoundY+5
+			Click, %FoundX%, %FoundY% Left, 1
+			Click 2
+			Sleep 150
+			Send {LCtrl down}c{LCtrl up}
+			Sleep 150
+			CaseRecordType := Clipboard
+			CaseRecordType := RegExReplace(CaseRecordType, "^\s+", "")  ; (Strip leading spaces)
+			CaseRecordType := RegExReplace(CaseRecordType, "\s+$", "")  ; (Strip trailing spaces)
+			CaseRecordType := RegExReplace(CaseRecordType, "`r`n.*", "")
+			CaseRecordType := RegExReplace(CaseRecordType, "`r`n", "")
+			Clipboard := CaseRecordType
+		}
+		
+		; FILL IN: Contact Email  442, 607
+		if (CaseRecordType = "LVHD")
+		{
+			WinGetClass, WINclass, A
+			InputBox, UEMAIL, Contact Email Required, , , 250, 100
+			if (UEMAIL = "")
+			{
+				UEMAIL := "null@null.com"
+			}
+			WinActivate, ahk_class %WINclass%
+			
+			Loop, 5
+			{
+				CoordMode, Pixel, Client
+				ImageSearch, FoundX, FoundY, 222, 570, 544, 670, *150 %Resources%\Email.jpg ; (x440 y450)
+			}
+			If ErrorLevel = 0
+			{
+				; Caller Email
+				FoundX := FoundX+130
+				FoundY := FoundY+10
+				Click, %FoundX%, %FoundY% Left, 1
+				Send {LCtrl down}a{LCtrl up}{Del}
+				Sleep 50
+				Send %UEMAIL%
+				Sleep 150
+				Send {Esc}
+				Sleep 150
+			}
+		}
+		
+		; FILL IN: Status, Severity Level
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 222, 354, 544, 582, *150 %Resources%\Status.jpg ; (x440 y450)
+		}
+		If ErrorLevel = 0
+		{
+			; Status
+			FoundX := FoundX+75
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send %CaseStatus%{Enter}
+			Sleep 150
+		
+			; Severity Level
+			FoundY := FoundY+28
+			Click, %FoundX%, %FoundY% Left, 1
+			Send 4{Enter}
+			Sleep 150
+		}
+		
+		; FILL IN: Case Origin
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 936, 475, 1204, 703, *150 %Resources%\CaseOrigin.jpg ; (x440 y450)
+		}
+		If ErrorLevel = 0
+		{
+			; Case Origin
+			FoundX := FoundX+100
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send Phone{Enter}
+			Sleep 150
+		}
+		
+		; FILL IN: Caller Name, Caller Phone
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 936, 475, 1204, 703, *150 %Resources%\CallerName.jpg ; (x1050 y571)
+		}
+		If ErrorLevel = 0
+		{
+			; Caller Name
+			FoundX := FoundX+130
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 50
+			Send %ClipifyName%
+			Sleep 150
+			Send {Esc}
+			Sleep 150
+			
+			; Caller Phone
+			FoundY := FoundY+28
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 50
+			Send %ClipifyPhone%
+			Sleep 150
+			Send {Esc}
+			Sleep 150
+		}
+		
+		; FILL IN: Subject
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 216, 758, 588, 1000, *150 %Resources%\Subject.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Subject
+			FoundX := FoundX+100
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 150
+			SendRaw %ClipifySubject%
+			Sleep 300
+			Send {Esc}
+			Sleep 150
+			
+			; Description
+			FoundY := FoundY+28
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 150
+			SendRaw %ClipifyNotes%
+			Sleep 300
+			Send {Esc}
+			Sleep 150
+		}
+		
+			FoundX := FoundX-150
+			Click, %FoundX%, %FoundY% Left, 1
+			Sleep 50
+			Send {PgDn}
+			Sleep 150
+			
+		; FILL IN: Case Details
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Type
+			FoundX := FoundX+100
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send Problem{Enter}
+			Sleep 150
+			
+			; Vendor
+			FoundY := FoundY+25
+			Click, %FoundX%, %FoundY% Left, 1
+			Send Everi{Enter}
+			Sleep 150
+			
+			; Product Family
+			FoundY := FoundY+25
+			if (ProductFamily != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %ProductFamily%{Enter}
+				Sleep 150
+			}
+			
+			; Case Reason
+			FoundY := FoundY+25
+			if (CaseReason != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %CaseReason%{Enter}
+				Sleep 150
+			}
+			
+			; Root Cause 1
+			FoundY := FoundY+25
+			if (RootCause1 != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %RootCause1%{Enter}
+				Sleep 150
+			}
+			
+			; Root Cause 2
+			FoundY := FoundY+25
+			if (RootCause2 != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %RootCause2%{Enter}
+				Sleep 150
+			}
+		}
+		
+		;Send {LCtrl down}{Home}{LCtrl up}
+		
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Type
+			FoundX := FoundX-25
+			FoundY := FoundY+5
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {Up 5}
+			Sleep 150
+		}
+		
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 450, 110, 800, 280, *150 %Resources%\SrchIcon.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Type
+			FoundX := FoundX+10
+			FoundY := FoundY+5
+			Click, %FoundX%, %FoundY% Left, 0
+			Sleep 150
+		}
+		
+		return
+	}
+	
+	Firefox()
+	{
+		global
+		
+		;**************************************************
+		; DETECT: Case Record Type 	x1138 y432 | 1157 436
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 925, 375, 1140, 420, *150 %Resources%\CaseRecordType-FF.jpg ; (x440 y450)
+		}
+		If ErrorLevel = 0
+		{
+			FoundX := FoundX+136
+			FoundY := FoundY+5
+			Click, %FoundX%, %FoundY% Left, 1
+			Click 2
+			Sleep 150
+			Send {LCtrl down}c{LCtrl up}
+			Sleep 150
+			CaseRecordType := Clipboard
+			CaseRecordType := RegExReplace(CaseRecordType, "^\s+", "")  ; (Strip leading spaces)
+			CaseRecordType := RegExReplace(CaseRecordType, "\s+$", "")  ; (Strip trailing spaces)
+			CaseRecordType := RegExReplace(CaseRecordType, "`r`n.*", "")
+			CaseRecordType := RegExReplace(CaseRecordType, "`r`n", "")
+			Clipboard := CaseRecordType
+		}
+
+		;**************************************************
+		; FILL IN: Contact Email  442, 607
+		if (CaseRecordType = "LVHD")
+		{
+			WinGetClass, WINclass, A
+			InputBox, UEMAIL, Contact Email Required, , , 250, 100
+			if (UEMAIL = "")
+			{
+				UEMAIL := "null@null.com"
+			}
+			WinActivate, ahk_class %WINclass%
+			
+			Loop, 5
+			{
+				CoordMode, Pixel, Client
+				ImageSearch, FoundX, FoundY, 225, 555, 500, 595, *150 %Resources%\Email-FF.jpg ; (x440 y450)
+			}
+			If ErrorLevel = 0
+			{
+				; Caller Email
+				FoundX := FoundX+130
+				FoundY := FoundY+10
+				Click, %FoundX%, %FoundY% Left, 1
+				Send {LCtrl down}a{LCtrl up}{Del}
+				Sleep 50
+				Send %UEMAIL%
+				Sleep 150
+				Send {Esc}
+				Sleep 150
+			}
+		}
+		
+		;**************************************************
+		; FILL IN: Status, Severity Level
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 230, 405, 521, 440, *150 %Resources%\Status-FF.jpg ; (x440 y450)
+		}
+		If ErrorLevel = 0
+		{
+			; Status
+			FoundX := FoundX+75
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Sleep 150
+			Send %CaseStatus%{Enter}
+			Sleep 150
+		
+			; Severity Level
+			FoundY := FoundY+28
+			Click, %FoundX%, %FoundY% Left, 1
+			Sleep 150
+			Send 4{Enter}
+			Sleep 150
+		}	
+
+		;**************************************************
+		; FILL IN: Case Origin
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 935, 420, 1220, 630, *150 %Resources%\CaseOrigin-FF.jpg ; (x440 y450)
+		}
+		If ErrorLevel = 0
+		{
+			Msgbox CaseOrigin found
+			; Case Origin
+			FoundX := FoundX+100
+			FoundY := FoundY+10
+			
+			Sleep 500
+			Send {Click, %FoundX%, %FoundY% Left, 1}Phone{Esc}
+			Sleep 5000
+		}
+		If ErrorLevel = 1
+		{
+			Msgbox CaseOrigin Not found
+		}
+		Msgbox STOP
+		;**************************************************
+		; FILL IN: Caller Name, Caller Phone
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 950, 535, 1175, 570, *150 %Resources%\CallerName-FF.jpg ; (x1050 y571)
+		}
+		If ErrorLevel = 0
+		{
+			; Caller Name
+			Sleep 150
+			FoundX := FoundX+130
+			FoundY := FoundY+9
+			Sleep 150
+			Click, %FoundX%, %FoundY% Left, 1
+			Sleep 150
+			Msgbox STOP
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 2000
+			Send %ClipifyName%
+			Msgbox STOP
+			Sleep 150
+			Send {Esc}
+			Sleep 150
+			
+			; Caller Phone
+			FoundY := FoundY+28
+			Click, %FoundX%, %FoundY% Left, 1
+			Msgbox STOP
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 50
+			Send %ClipifyPhone%
+			Sleep 150
+			Send {Esc}
+			Sleep 150
+		}
+		
+		;**************************************************
+		; FILL IN: Subject
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 230, 820, 525, 855, *150 %Resources%\Subject.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			Msgbox Subject found
+			; Subject
+			FoundX := FoundX+100
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 150
+			SendRaw %ClipifySubject%
+			Sleep 300
+			Send {Esc}
+			Sleep 150
+			
+			; Description
+			FoundY := FoundY+28
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {LCtrl down}a{LCtrl up}{Del}
+			Sleep 150
+			SendRaw %ClipifyNotes%
+			Sleep 300
+			Send {Esc}
+			Sleep 150
+		}
+		If ErrorLevel = 1
+		{
+			Msgbox Subject not found
+		}
+		Msgbox STOP
+		
+			FoundX := FoundX-150
+			Click, %FoundX%, %FoundY% Left, 1
+			Sleep 50
+			Send {PgDn}
+			Sleep 150
+			
+		;**************************************************
+		; FILL IN: Case Details
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Type
+			FoundX := FoundX+100
+			FoundY := FoundY+10
+			Click, %FoundX%, %FoundY% Left, 1
+			Send Problem{Enter}
+			Sleep 150
+			
+			; Vendor
+			FoundY := FoundY+25
+			Click, %FoundX%, %FoundY% Left, 1
+			Send Everi{Enter}
+			Sleep 150
+			
+			; Product Family
+			FoundY := FoundY+25
+			if (ProductFamily != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %ProductFamily%{Enter}
+				Sleep 150
+			}
+			
+			; Case Reason
+			FoundY := FoundY+25
+			if (CaseReason != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %CaseReason%{Enter}
+				Sleep 150
+			}
+			
+			; Root Cause 1
+			FoundY := FoundY+25
+			if (RootCause1 != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %RootCause1%{Enter}
+				Sleep 150
+			}
+			
+			; Root Cause 2
+			FoundY := FoundY+25
+			if (RootCause2 != "")
+			{
+				Click, %FoundX%, %FoundY% Left, 1
+				Send %RootCause2%{Enter}
+				Sleep 150
+			}
+		}
+		
+		;Send {LCtrl down}{Home}{LCtrl up}
+		
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 229, 139, 601, 381, *150 %Resources%\Type.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Type
+			FoundX := FoundX-25
+			FoundY := FoundY+5
+			Click, %FoundX%, %FoundY% Left, 1
+			Send {Up 5}
+			Sleep 150
+		}
+		
+		Loop, 5
+		{
+			CoordMode, Pixel, Client
+			ImageSearch, FoundX, FoundY, 450, 110, 800, 280, *150 %Resources%\SrchIcon.jpg ; (x434 y854)
+		}
+		If ErrorLevel = 0
+		{
+			; Type
+			FoundX := FoundX+10
+			FoundY := FoundY+5
+			Click, %FoundX%, %FoundY% Left, 0
+			Sleep 150
+		}
+		
+		return
+	}
 }
 
 class xchange
