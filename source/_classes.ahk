@@ -1371,7 +1371,7 @@ class xchange
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := "SF#" SFCASE " " SITENAME " -- " SVC_TYPE_SUBJ " - " GAMENAME ", " DESC_SUB
 						ClipifySubject := GAMENAME ", " DESC_SUB
 					}
 					else
@@ -1384,7 +1384,7 @@ class xchange
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := "SF#" SFCASE " " SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB
 						ClipifySubject := DESC_SUB
 					}
 					else
@@ -1400,7 +1400,7 @@ class xchange
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := "SF#" SFCASE " " SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " TID ", " DESC_SUB
 						ClipifySubject := TID ", " DESC_SUB
 					}
 					else
@@ -1413,7 +1413,7 @@ class xchange
 				{
 					if (SFCASE!="")
 					{
-						SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB " (SF#" SFCASE ")"
+						SUBJECT := "SF#" SFCASE " " SUBJECT := SITENAME " -- " SVC_TYPE_SUBJ " - " DESC_SUB
 						ClipifySubject := DESC_SUB
 					}
 					else
